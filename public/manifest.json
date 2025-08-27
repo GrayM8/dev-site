@@ -1,0 +1,23 @@
+{
+  "short_name": "Gray Marshall",
+  "name": "Gray Marshall — Portfolio",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0d0d0d",
+  "background_color": "#ffffff",
+  "description": "Portfolio of Gray Marshall: selected projects in React, systems, and telemetry. Includes experience, education, and contact."
+}

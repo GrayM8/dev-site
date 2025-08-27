@@ -1,0 +1,494 @@
+:root {
+    --bg: #f7f7f8;
+    --panel: #ffffff;
+    --text: #0b0b0c;
+    --muted: #54555a;
+    --border: #e7e7ea;
+    --accent: #0ea5e9;
+
+    --btn-bg: #f1f2f4;
+    --btn-bg-hover: #e7e8eb;
+    --chip-bg: #f7f7f8;
+    --chip-text: #35363a;
+    --btn-active-bg: var(--accent);
+    --btn-active-text: #ffffff;
+}
+body.dark {
+    --bg: #0b0b0c;
+    --panel: #141416;
+    --text: #f2f2f3;
+    --muted: #bbbcc2;
+    --border: #262629;
+    --accent: #7dd3fc;
+
+    --btn-bg: #1d1e21;
+    --btn-bg-hover: #232428;
+    --chip-bg: #1a1b1e;
+    --chip-text: #d8d9de;
+    --btn-active-bg: var(--accent);
+    --btn-active-text: #0b0b0c;
+}
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif;
+}
+a { color: var(--accent); text-decoration: none; }
+.container { max-width: 960px; margin: 0 auto; padding: 24px; z-index: 1; }
+.panel { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; z-index: 1; }
+.stack { display: grid; gap: 12px; }
+.row { display: flex; gap: 12px; align-items: center; }
+.btn {
+    background: var(--btn-bg); border: 1px solid var(--border);
+    padding: 8px 12px; border-radius: 10px; color: var(--text);
+    transition: background 0.2s ease, color 0.2s ease;
+}
+.btn:hover { background: var(--btn-bg-hover); }
+.small { font-size: 12px; color: var(--muted); }
+.h1 { font-size: 28px; font-weight: 700; margin: 0; }
+.h2 { font-size: 18px; font-weight: 700; margin: 0; }
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+.tag {
+    font-size: 12px; padding: 4px 8px; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--chip-bg); color: var(--chip-text);
+}
+/* --- Responsive Nav --- */
+.nav-bar { align-items: center; }            /* keep items on one line */
+.nav-links-desktop { display: flex; gap: 12px; }
+.nav-burger { display: none; padding: 6px 8px; }
+.nav-resume { display: inline-flex; }
+
+/* Mobile panel (hidden by default) */
+.nav-mobile {
+    display: none;
+    border-top: 1px solid var(--border);
+    background: var(--panel);
+    padding: 8px 12px;
+}
+.nav-mobile a { display: block; padding: 8px 0; }
+/* Under 600px: hide desktop links, show burger. Use higher specificity
+   to override the generic `.row { display: flex; }` rule. */
+@media (max-width: 600px) {
+    header .nav-links-desktop { display: none; }    /* specificity beats .row */
+    header .nav-burger { display: inline-flex; }
+    header .container { padding: 12px; }            /* keep bar tidy on small widths */
+
+    /* Mobile panel visibility */
+    header .nav-mobile { display: none; }
+    header .nav-mobile.open { display: block; }
+}
+/* --- One-line filter carousel --- */
+.filter-rail-wrap {
+    position: relative;
+    display: grid;
+    grid-template-columns: 28px 1fr 28px;
+    align-items: center;
+    gap: 6px;
+}
+.filter-rail {
+    display: inline-flex;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 0;
+    scrollbar-width: none;
+    background: transparent; /* important so only chips fade */
+    scroll-snap-type: x proximity;
+}
+.filter-rail::-webkit-scrollbar { display: none; }
+.filter-rail > .btn {
+    scroll-snap-align: start;
+}
+.carousel-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--btn-bg);
+    color: var(--text);
+}
+.carousel-btn:hover { background: var(--btn-bg-hover); }
+.carousel-btn:disabled { opacity: 0.35; pointer-events: none; }
+.filter-rail {
+    --fade-left: 0px;
+    --fade-right: 0px;
+    /* WebKit/Chromium */
+    /*noinspection CssInvalidPropertyValue*/
+    -webkit-mask-image: linear-gradient(
+            to right,
+            transparent 0,
+            #000 var(--fade-left),
+            #000 calc(100% - var(--fade-right)),
+            transparent 100%
+    );
+    -webkit-mask-repeat: no-repeat;
+
+    /* Standards (Firefox) */
+    mask-image: linear-gradient(
+            to right,
+            transparent 0,
+            #000 var(--fade-left),
+            #000 calc(100% - var(--fade-right)),
+            transparent 100%
+    );
+    mask-repeat: no-repeat;
+}
+.filter-rail { scroll-padding: 6px; }
+/* Force all project tiles uniform */
+.project-card {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    height: 360px;
+    width: 425px;
+}
+
+.project-thumb {
+    width: 100%;
+    height: 160px;                /* uniform thumbnail */
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+    background: var(--panel);
+}
+
+.card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.card-body p.small {
+    flex-grow: 1;                 /* expands/shrinks so tags push to bottom */
+}
+
+.card-body .tags {
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+}
+.hero-right {
+    width: 160px;
+    height: 160px;
+    margin-left: 16px;
+    flex: 0 0 auto;
+}
+.hero-headshot {
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+    object-fit: cover;
+    border: 2px solid var(--border);
+    background: var(--panel);
+}
+
+/* Stack nicely on small screens */
+@media (max-width: 700px) {
+    .hero-row { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .hero-right { width: 120px; height: 120px; margin-left: 0; }
+}
+.tile-logo {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+}
+header nav a.active {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+footer.panel {
+    text-align: center;
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+footer a:hover {
+    text-decoration: underline;
+}
+/* === Animated Dot Grid (Light & Dark) — Oscillating Drift === */
+:root {
+    --dots-spacing: 25px;          /* grid density */
+    --dots-size: 0.5px;            /* dot radius */
+    --dots-opacity: 0.28;          /* base opacity (light) */
+    --dots-color: var(--text);     /* dot color (ties to theme text) */
+
+    --dots-drift: 2px;            /* <-- how far dots travel from origin (try 10–40px) */
+}
+
+body.dark {
+    --dots-opacity: 0.50;          /* stronger in dark */
+    --dots-color: #ffffff;
+}
+
+/* Each pseudo-element contains TWO grid layers (even/odd positions) */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+            radial-gradient(circle, var(--dots-color) var(--dots-size), transparent calc(var(--dots-size) + 0.5px)),
+            radial-gradient(circle, var(--dots-color) var(--dots-size), transparent calc(var(--dots-size) + 0.5px));
+    background-size:
+            calc(var(--dots-spacing) * 2) calc(var(--dots-spacing) * 2),
+            calc(var(--dots-spacing) * 2) calc(var(--dots-spacing) * 2);
+    opacity: var(--dots-opacity);
+}
+
+/* Start aligned to axis grid (no 45°) */
+body::before {
+    /* Layers: (0,0) and (S,0) */
+    background-position:
+            0 0,
+            var(--dots-spacing) 0;
+
+    /* Pulse + oscillating diagonal drift */
+    animation:
+            dotsPulse 7s ease-in-out infinite,
+            dotsDriftBefore 105s linear infinite alternate;  /* <-- 'alternate' */
+    animation-delay: -3.5s, 0s; /* pulse offset only */
+}
+
+body::after {
+    /* Layers: (0,S) and (S,S) */
+    background-position:
+            0 var(--dots-spacing),
+            var(--dots-spacing) var(--dots-spacing);
+
+    animation:
+            dotsPulse 7s ease-in-out infinite,
+            dotsDriftAfter 132s linear infinite alternate;   /* <-- 'alternate' */
+    animation-delay: 0s, 0s;
+}
+
+/* Opacity breathing */
+@keyframes dotsPulse {
+    0%, 100% { opacity: calc(var(--dots-opacity) - 0.12); }
+    50%      { opacity: calc(var(--dots-opacity) + 0.12); }
+}
+
+/* Oscillate by ± --dots-drift (NE and NW for ::before) */
+@keyframes dotsDriftBefore {
+    0% {
+        background-position:
+                0 0,
+                var(--dots-spacing) 0;
+    }
+    100% {
+        background-position:
+                calc(0px + var(--dots-drift)) calc(0px + var(--dots-drift)),                       /* +X +Y */
+                calc(var(--dots-spacing) - var(--dots-drift)) calc(0px + var(--dots-drift));       /* -X +Y */
+    }
+}
+
+/* Oscillate by ± --dots-drift (SE and SW for ::after) */
+@keyframes dotsDriftAfter {
+    0% {
+        background-position:
+                0 var(--dots-spacing),
+                var(--dots-spacing) var(--dots-spacing);
+    }
+    100% {
+        background-position:
+                calc(0px + var(--dots-drift)) calc(var(--dots-spacing) - var(--dots-drift)),       /* +X -Y */
+                calc(var(--dots-spacing) - var(--dots-drift)) calc(var(--dots-spacing) - var(--dots-drift)); /* -X -Y */
+    }
+}
+
+/* Reduced motion: no pulse/drift */
+@media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after { animation: none; }
+}
+
+/* Keep app content above background */
+header { position: sticky; top: 0; z-index: 10; }
+.container { position: relative; z-index: 1; }
+/* 3D hover tilt (respects reduced motion) */
+.tilt {
+    perspective: 800px;
+}
+.tilt > * {
+    transform: translateZ(0)
+    rotateX(var(--rx, 0deg))
+    rotateY(var(--ry, 0deg))
+    translateY(calc(var(--lift, 0px) * -1));
+    transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    transform-style: preserve-3d;
+}
+@media (prefers-reduced-motion: reduce) {
+    .tilt > * {
+        transition: background .18s ease, box-shadow .18s ease;
+        transform: none !important;
+    }
+}
+@media print {
+    /* White page, reliable colors */
+    html, body {
+        background: #fff !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        padding-top: 0 !important;
+    }
+    /* --- Controls: make all buttons/CTAs print white with black text/borders --- */
+    a.btn,
+    button.btn,
+    .btn,
+    .carousel-btn,
+    .theme-toggle,
+    .filter-rail .btn {
+        background: #fff !important;
+        color: #000 !important;
+        border: 1px solid #000 !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+    header, nav {
+        display: block !important;
+        position: static !important;
+        top: 0; left: 0; right: 0;
+        background: #fff !important;
+        border-bottom: 1px solid #000 !important;
+        box-shadow: none !important;
+        z-index: 9999 !important;
+    }
+
+    /* Disable sticky behavior that can confuse print layout */
+    header * { position: static !important; }
+
+    /* Remove hover/active/ghost variants in print */
+    .btn:hover,
+    .btn:active,
+    .btn.ghost,
+    .carousel-btn:hover,
+    .carousel-btn:active {
+        background: #fff !important;
+        color: #000 !important;
+        border-color: #000 !important;
+    }
+
+    /* Ensure disabled buttons are still readable */
+    .btn[disabled],
+    button[disabled] {
+        opacity: 1 !important;
+        color: #000 !important;
+        border-color: #000 !important;
+    }
+
+    /* Filter rail: kill the edge fade/masks so chips don't appear dark */
+    .filter-rail {
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+        overflow: visible !important; /* avoid clipped edges in some printers */
+    }
+
+    /* Toggle (common patterns): switches/sliders should render as simple outlines */
+    input[type="checkbox"],
+    input[type="radio"] {
+        accent-color: #000 !important; /* modern browsers */
+    }
+    .theme-toggle *,
+    .switch *,
+    .slider * {
+        background: #fff !important;
+        border-color: #000 !important;
+    }
+
+    /* Icons inside buttons/links: force black strokes/fills */
+    .btn svg,
+    .btn svg * ,
+    .carousel-btn svg,
+    .carousel-btn svg * {
+        fill: #000 !important;
+        stroke: #000 !important;
+    }
+
+    /* If your Resume link in the nav prints, keep it styled like a button */
+    nav .btn {
+        background: #fff !important;
+        color: #000 !important;
+        border: 1px solid #000 !important;
+    }
+
+    /* Hide only the animated dot layers */
+    body::before,
+    body::after { display: none !important; }
+
+    /* Keep footer visible */
+    footer { display: block !important; }
+
+    /* Ensure sections & layouts render as simple blocks */
+    section, .container, .panel, .stack, .grid { display: block !important; }
+
+    /* CRITICAL: neutralize Framer Motion wrappers at the spots they wrap */
+    section > *,
+    .stack > *,
+    .grid > * {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+        transition: none !important;
+    }
+
+    /* Flatten panels (no shadows/colors) but KEEP a subtle divider */
+    .panel {
+        background: transparent !important;
+        box-shadow: none !important;
+        border: 1px solid #000 !important;
+        padding: 12px !important;
+        /* remove break-inside to avoid WebKit print dropouts */
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+    }
+
+    /* Thumbnails: show and keep tidy */
+    .project-thumb {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        max-height: 180px !important;
+        object-fit: cover !important;
+        border: 1px solid #000 !important;
+        margin-bottom: 8px !important;
+        background: #fff !important;
+    }
+
+    /* Tags/chips readable on white */
+    .tag {
+        background: #fff !important;
+        color: #000 !important;
+        border: 1px solid #000 !important;
+    }
+    .small, .muted, .caption { color: #000 !important; }
+
+    /* Links: optional URL reveal (remove if you don’t want this) */
+    a::after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+    }
+
+    /* Page margins */
+    @page { margin: 1in; }
+}
