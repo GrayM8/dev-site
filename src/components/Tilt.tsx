@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 
 type Props = React.PropsWithChildren<{
     maxTiltDeg?: number;   // e.g., 4

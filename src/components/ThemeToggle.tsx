@@ -19,7 +19,7 @@ export default function ThemeToggle() {
         localStorage.setItem('theme', dark ? 'dark' : 'light');
     }, [dark]);
 
-    // React to system changes (only when user hasn't explicitly chosen)
+    // React to system changes (only when not explicitly chosen)
     useEffect(() => {
         const mql = window.matchMedia('(prefers-color-scheme: dark)');
         const handler = (e: MediaQueryListEvent) => {

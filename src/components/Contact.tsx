@@ -7,7 +7,7 @@ const handlePrint = () => {
     // Give the browser a tick to reflow with the print CSS
     requestAnimationFrame(() => {
         window.print();
-        // (Optional) restore scroll after print dialog closes
+        // Restore scroll after print dialog closes
         setTimeout(() => window.scrollTo(0, y), 0);
     });
 };

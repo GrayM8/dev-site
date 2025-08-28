@@ -5,7 +5,6 @@ export default function EducationItem({ item }: { item: Education }) {
         <article className="panel" style={{ padding: 16 }}>
             <div className="row" style={{ justifyContent: 'space-between', alignItems: 'baseline' }}>
                 <div className="row" style={{ alignItems: 'center', gap: 10 }}>
-                    {/* NEW: logo */}
                     {item.logo && (
                         <img src={item.logo} alt="" className="tile-logo" />
                     )}

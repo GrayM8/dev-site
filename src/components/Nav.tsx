@@ -1,5 +1,5 @@
 import ThemeToggle from './ThemeToggle';
-import { useEffect, useId, useState } from 'react'
+import React, { useEffect, useId, useState } from 'react'
 
 function DownloadIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
@@ -57,7 +57,7 @@ export default function Nav({ title, links }: NavProps) {
     return (
         <header className="panel" style={{ position: 'sticky', top: 0, zIndex: 10, marginBottom: 12 }}>
             <div className="container row nav-bar" style={{ justifyContent: 'space-between', padding: 12 }}>
-                {/* Left Brand, Resume */}
+                {/* Left: Brand + Resume (stays where you want it) */}
                 <div className="row" style={{ gap: 12 }}>
                     <strong>{title}</strong>
                     <a className="btn small row nav-resume" href="/Gray-Marshall-Resume.pdf" download style={{ gap: 6 }}>
@@ -66,29 +66,35 @@ export default function Nav({ title, links }: NavProps) {
                     </a>
                 </div>
 
-                {/* Right Links (Desktop) */}
-                <nav className="row nav-links-desktop">
-                {links.map((l) => (
-                    <a key={l.href} href={l.href} className="small">{l.label}</a>
-                ))}
-                <ThemeToggle />
-                </nav>
+                {/* Right: desktop links (hidden on mobile) & actions */}
+                <div className="row nav-right">
+                    <nav className="row nav-links-desktop">
+                        {links.map((l) => (
+                            <a key={l.href} href={l.href} className="small">{l.label}</a>
+                        ))}
+                    </nav>
 
-                {/* Right Hamburger (mobile) */}
-                <button
-                    className="btn small nav-burger"
-                    aria-controls={menuId}
-                    aria-expanded={open}
-                    onClick={() => setOpen((v) => !v)}
-                >
-                    <HamburgerIcon open={open} />
-                </button>
+                    <div className="nav-actions">
+                        {/* Theme toggle lives here so it shows on mobile too */}
+                        <ThemeToggle />
+
+                        {/* Burger (only shows on mobile via CSS) */}
+                        <button
+                            className="btn small nav-burger"
+                            aria-controls={menuId}
+                            aria-expanded={open}
+                            onClick={() => setOpen((v) => !v)}
+                        >
+                            <HamburgerIcon open={open} />
+                        </button>
+                    </div>
+                </div>
             </div>
+
             {/* Mobile menu panel */}
             <div
                 id={menuId}
                 className={`nav-mobile ${open ? 'open' : ''}`}
-                // click a link closes menu
                 onClick={(e) => {
                     const el = e.target as HTMLElement;
                     if (el.tagName === 'A') setOpen(false);

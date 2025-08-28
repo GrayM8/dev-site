@@ -61,17 +61,36 @@ a { color: var(--accent); text-decoration: none; }
     border: 1px solid var(--border); background: var(--chip-bg); color: var(--chip-text);
 }
 /* --- Responsive Nav --- */
-.nav-bar { align-items: center; }            /* keep items on one line */
-.nav-links-desktop { display: flex; gap: 12px; }
+.nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+/* Keep links tight against the actions */
+.nav-links-desktop {
+    display: flex;
+    gap: 12px;
+}
 .nav-burger { display: none; padding: 6px 8px; }
 .nav-resume { display: inline-flex; }
-
 /* Mobile panel (hidden by default) */
 .nav-mobile {
     display: none;
     border-top: 1px solid var(--border);
     background: var(--panel);
     padding: 8px 12px;
+}
+/* Actions always flush right */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.nav-right {
+    margin-left: auto;             /* push this whole group to the far right */
+    display: flex;
+    align-items: center;
+    gap: 16px;                     /* space between links and toggle */
 }
 .nav-mobile a { display: block; padding: 8px 0; }
 /* Under 600px: hide desktop links, show burger. Use higher specificity
@@ -153,8 +172,8 @@ a { color: var(--accent); text-decoration: none; }
     display: flex;
     flex-direction: column;
     padding: 16px;
-    height: 360px;
-    width: 425px;
+    min-height: 360px;
+    max-width: 425px;
 }
 
 .project-thumb {
