@@ -16,7 +16,7 @@ export default function Contact() {
     return (
         <section id="contact" className="stack">
             <div className="stack">
-                <p className="small">I’d love to connect! Here are the easiest ways to reach me:</p>
+                <p className="small">I’d love to connect! Here are the easiest ways to reach me.</p>
                 <div className="row" style={{ flexWrap: 'wrap' }}>
                     <motion.a className="btn" href="mailto:matthew.gray.marshall@gmail.com" whileHover={{ y: -2, boxShadow: '0 2px 4px rgba(0, 0, 0, 0.12)', }} transition={hoverLift} >Email</motion.a>
                     <motion.a className="btn" href="https://www.linkedin.com/in/graymarshall" target="_blank" rel="noreferrer" whileHover={{ y: -2, boxShadow: '0 2px 4px rgba(0, 0, 0, 0.12)',}} transition={hoverLift} >LinkedIn</motion.a>

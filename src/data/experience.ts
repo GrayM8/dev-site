@@ -22,7 +22,7 @@ export const experience: Experience[] = [
         org: 'Longhorn Sim Racing Club (LSR)',
         when: '2025 — Present',
         bullets: [
-            'Launched recruiting/events site with modern TypeScript stack.',
+            'Building recruiting/events site with modern TypeScript stack.',
             'Owned UX, authentication, and roster workflows.',
         ],
         logo: '/logos/longhorn_sim_racing_logo.jfif',
