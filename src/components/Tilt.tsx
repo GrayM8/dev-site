@@ -6,7 +6,7 @@ type Props = React.PropsWithChildren<{
     className?: string;
 }>;
 
-export default function Tilt({ children, maxTiltDeg = 4, hoverLift = 4, className }: Props) {
+export default function Tilt({ children, maxTiltDeg = 6, hoverLift = 4, className }: Props) {
     const ref = useRef<HTMLDivElement>(null);
 
     const onMove: React.MouseEventHandler<HTMLDivElement> = (e) => {
