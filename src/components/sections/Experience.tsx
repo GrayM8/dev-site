@@ -1,12 +1,21 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { motion } from "framer-motion";
 import { experiences, getPeriodString, getTenureString } from "@/content/experience";
 
 function SkillsBanner({ skills }: { skills: string[] }) {
+  const firstSetRef = useRef<HTMLDivElement>(null);
+  const [setWidth, setSetWidth] = useState(0);
+
+  useEffect(() => {
+    if (firstSetRef.current) {
+      setSetWidth(firstSetRef.current.offsetWidth);
+    }
+  }, [skills]);
+
   return (
     <div className="mt-6 overflow-hidden">
       <div className="relative">
@@ -14,10 +23,21 @@ function SkillsBanner({ skills }: { skills: string[] }) {
         <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-[rgb(10,10,10)] via-[rgba(10,10,10,0.5)] to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[rgb(10,10,10)] via-[rgba(10,10,10,0.5)] to-transparent z-10 pointer-events-none" />
 
-        {/* Scrolling container with CSS animation */}
-        <div className="flex w-fit animate-scroll-left">
+        {/* Scrolling container */}
+        <motion.div
+          className="flex w-fit"
+          animate={setWidth > 0 ? { x: [0, -setWidth] } : undefined}
+          transition={{
+            x: {
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 40,
+              ease: "linear",
+            },
+          }}
+        >
           {/* First set */}
-          <div className="flex gap-3 shrink-0 pr-3">
+          <div ref={firstSetRef} className="flex gap-3 shrink-0 pr-3">
             {skills.map((skill, idx) => (
               <span
                 key={`a-${idx}`}
@@ -38,7 +58,7 @@ function SkillsBanner({ skills }: { skills: string[] }) {
               </span>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

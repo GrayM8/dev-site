@@ -338,6 +338,12 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
                       Experience
                     </button>
                     <button
+                      onClick={() => scrollToSection("education")}
+                      className="text-muted-foreground hover:text-accent transition-colors"
+                    >
+                      Education
+                    </button>
+                    <button
                       onClick={() => scrollToSection("contact")}
                       className="text-muted-foreground hover:text-accent transition-colors"
                     >

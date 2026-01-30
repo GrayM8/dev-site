@@ -8,10 +8,15 @@ export interface ExperienceRole {
   skills?: string[];
 }
 
-/** Calculate tenure string from start date to end date (or present) */
+/** Calculate tenure string from start date to end date (or present), rounding up */
 export function getTenureString(startDate: Date, endDate?: Date): string {
   const end = endDate || new Date();
-  const months = (end.getFullYear() - startDate.getFullYear()) * 12 + (end.getMonth() - startDate.getMonth());
+  let months = (end.getFullYear() - startDate.getFullYear()) * 12 + (end.getMonth() - startDate.getMonth());
+
+  // Round up: if we're past the start day in the current month, count it as a full month
+  if (end.getDate() >= startDate.getDate()) {
+    months += 1;
+  }
 
   if (months < 1) return "< 1 mo";
   if (months === 1) return "1 mo";
@@ -68,13 +73,31 @@ export const experiences: ExperienceRole[] = [
     ]
   },
   {
-    title: "Telemetry Software Engineer | Electronics System",
-    org: "Longhorn Racing Electric (FSAE)",
-    startDate: new Date(2024, 0, 1), // January 2024
+    title: "Telemetry Software Engineer | Electronics System (Formula SAE EV Team)",
+    org: "Longhorn Racing",
+    location: "Austin, Texas, United States",
+    startDate: new Date(2024, 8, 1), // September 2024
     impact: [
-      "Developed data acquisition software for the team's electric competition vehicle.",
-      "Built a custom visualization suite for analyzing battery thermal performance and motor efficiency.",
-      "Optimized data transmission protocols to maximize bandwidth over low-quality connections."
+      "Develop and maintain a distributed, real-time telemetry system for a Formula SAE EV race car, supporting live data ingest, streaming, storage, and visualization during testing and competition.",
+      "Designed the on-car telemetry dashboard, balancing real-time data density, clarity, and reliability for use in high-speed, safety-critical conditions.",
+      "Work across the full telemetry pipeline, from on-car data ingestion through real-time distribution and persistent storage, enabling engineers and drivers to make time-critical decisions trackside.",
+      "Build web-based visualization tools in TypeScript / React for live timing, deltas, vehicle state, driver inputs, and energy usage, used across mobile devices, laptops, and trackside systems.",
+      "Integrate real-time streaming with backend data stores and processing pipelines to support analytics such as energy prediction and performance modeling.",
+      "Contribute to a safety- and reliability-critical codebase where correctness, latency, and fault tolerance directly impact on-track decision-making."
+    ],
+    skills: [
+      "Distributed Systems",
+      "SQL",
+      "TypeScript",
+      "Time Series Analysis",
+      "Data Visualization",
+      "Real-time Data Acquisition",
+      "Python (Programming Language)",
+      "Software Development",
+      "Reliability Engineering",
+      "Performance Analysis",
+      "Embedded Systems",
+      "Telemetry"
     ]
   }
 ];
