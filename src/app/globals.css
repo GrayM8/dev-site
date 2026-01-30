@@ -146,12 +146,29 @@
   animation: energyPulse 4s ease-in-out infinite;
 }
 
+/* Infinite scroll animation for skills banner */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-left {
+  animation: scroll-left 25s linear infinite;
+}
+
 /* LaserFlow & Animations - Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   canvas {
     animation: none !important;
   }
   .energy-border-glow {
+    animation: none !important;
+  }
+  .animate-scroll-left {
     animation: none !important;
   }
 }

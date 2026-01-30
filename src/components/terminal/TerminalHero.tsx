@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, useTransform, MotionValue, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { User, Download } from "lucide-react";
@@ -18,7 +19,10 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
   // Animation Phases
   const [headerPhase, setHeaderPhase] = useState<"boot" | "nav">(alwaysHeader ? "nav" : "boot");
   const [leftPhase, setLeftPhase] = useState<"running" | "role">(alwaysHeader ? "role" : "running");
-  const [rightPhase, setRightPhase] = useState<"active" | "resume">(alwaysHeader ? "active" : "active"); // Status usually active initially
+  const [rightPhase, setRightPhase] = useState<"active" | "resume">(alwaysHeader ? "resume" : "active");
+
+  const pathname = usePathname();
+  const router = useRouter();
 
   // --- Scroll Mappings (Pixels) ---
   // 0 - 500px: Type "npm run dev"
@@ -90,14 +94,14 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
         setLines(prev => [
           ...prev,
           <div key="output" className="mt-12 mb-12 flex items-center justify-center gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-             <div className="shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-full bg-muted border-2 border-accent/20 flex items-center justify-center overflow-hidden relative shadow-lg">
+             <div className="shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg bg-muted border-2 border-accent/20 flex items-center justify-center overflow-hidden relative shadow-lg">
                <User className="w-10 h-10 text-muted-foreground/50" />
                <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 to-transparent" />
              </div>
              <div className="text-left">
-               <div className="text-xl md:text-3xl font-bold text-foreground tracking-tight">Hey, I'm Gray Marshall.</div>
-               <div className="text-muted-foreground mt-2 text-sm md:text-base font-medium">Software Engineer & Full-Stack @ LHRE</div>
-               <div className="text-muted-foreground/80 text-sm md:text-base">CS @ UT Austin • Co-Founder @ LSR</div>
+               <div className="text-xl md:text-3xl font-bold text-foreground tracking-tight">Hey, I&apos;m Gray Marshall.</div>
+               <div className="text-muted-foreground mt-2 text-sm md:text-base font-medium">Software Engineering • Full-Stack &amp; Systems</div>
+               <div className="text-muted-foreground/80 text-sm md:text-base">Co-Founder &amp; CTO, Longhorn Sim Racing | CS @ UT Austin</div>
              </div>
           </div>,
           <div key="spacer" className="h-4" />
@@ -117,6 +121,12 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
   });
 
   const scrollToSection = (id: string) => {
+    // If not on home page, navigate to home with hash
+    if (pathname !== "/") {
+      router.push(`/#${id}`);
+      return;
+    }
+
     const element = document.getElementById(id);
     if (element) {
       const offset = 80;
@@ -235,9 +245,9 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
             style={{ opacity: headerContentOpacity }}
           >
             {/* Left: Identity */}
-            <div 
+            <div
               className="flex items-center gap-3 relative z-10 w-[200px] cursor-pointer group"
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              onClick={() => pathname === "/" ? window.scrollTo({ top: 0, behavior: 'smooth' }) : router.push("/")}
             >
                 <div className="w-8 h-8 rounded bg-muted border border-border flex items-center justify-center text-accent shrink-0 transition-transform group-hover:scale-105">
                   <span className="font-bold text-xs">GM</span>
@@ -300,12 +310,27 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
                     >
                       About
                     </button>
-                    <button
-                      onClick={() => scrollToSection("featured-projects")}
-                      className="text-muted-foreground hover:text-accent transition-colors"
-                    >
-                      Projects
-                    </button>
+                    <div className="relative group h-[40px] flex items-center overflow-hidden">
+                      {/* Default state - "Projects" */}
+                      <span className="text-muted-foreground group-hover:text-accent group-hover:-translate-y-full group-hover:opacity-0 transition-all duration-300 cursor-default">
+                        Projects
+                      </span>
+                      {/* Hover state - Two lines */}
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                        <button
+                          onClick={() => scrollToSection("featured-projects")}
+                          className="text-[10px] text-muted-foreground hover:text-accent transition-colors leading-tight whitespace-nowrap"
+                        >
+                          Featured
+                        </button>
+                        <button
+                          onClick={() => router.push("/projects")}
+                          className="text-[10px] text-muted-foreground hover:text-accent transition-colors leading-tight whitespace-nowrap"
+                        >
+                          All Projects
+                        </button>
+                      </div>
+                    </div>
                     <button
                       onClick={() => scrollToSection("experience")}
                       className="text-muted-foreground hover:text-accent transition-colors"

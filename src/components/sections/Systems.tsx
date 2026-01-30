@@ -153,7 +153,7 @@ export function Systems() {
 
         {/* View All Projects Section with Card Swap */}
         <motion.div
-          className="mt-24"
+          className="mt-24 pb-8"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -178,7 +178,15 @@ export function Systems() {
 
             {/* Card Swap Display - Right */}
             <div className="relative h-[180px] w-full md:w-[320px] shrink-0 hidden md:block">
-              <CardSwap
+              <div
+                className="absolute -inset-20"
+                style={{
+                  maskImage: 'radial-gradient(ellipse 80% 70% at 55% 45%, black 50%, transparent 90%)',
+                  WebkitMaskImage: 'radial-gradient(ellipse 80% 70% at 55% 45%, black 50%, transparent 90%)'
+                }}
+              >
+                <div className="absolute top-20 left-10 right-28 bottom-20">
+                  <CardSwap
                 width={200}
                 height={125}
                 cardDistance={30}
@@ -212,6 +220,8 @@ export function Systems() {
                     </Card>
                   ))}
               </CardSwap>
+                </div>
+              </div>
             </div>
           </div>
         </motion.div>
