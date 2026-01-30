@@ -287,24 +287,37 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
                     <div className="text-accent mt-0.5 text-[10px]">✓ Ready in 800ms</div>
                   </motion.div>
                 ) : (
-                  <motion.div 
+                  <motion.div
                     key="nav"
                     className="flex gap-4 sm:gap-6 text-sm font-medium"
                     initial={{ y: 10, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.4 }}
                   >
-                    {["About", "Systems", "Experience"].map((item) => (
-                      <button 
-                        key={item}
-                        onClick={() => scrollToSection(item.toLowerCase())}
-                        className="text-muted-foreground hover:text-accent transition-colors"
-                      >
-                        {item}
-                      </button>
-                    ))}
-                    {/* Hide extra links on tiny screens if needed, or keep succinct */}
-                    <button onClick={() => scrollToSection("contact")} className="text-muted-foreground hover:text-accent transition-colors">Contact</button>
+                    <button
+                      onClick={() => scrollToSection("about")}
+                      className="text-muted-foreground hover:text-accent transition-colors"
+                    >
+                      About
+                    </button>
+                    <button
+                      onClick={() => scrollToSection("featured-projects")}
+                      className="text-muted-foreground hover:text-accent transition-colors"
+                    >
+                      Projects
+                    </button>
+                    <button
+                      onClick={() => scrollToSection("experience")}
+                      className="text-muted-foreground hover:text-accent transition-colors"
+                    >
+                      Experience
+                    </button>
+                    <button
+                      onClick={() => scrollToSection("contact")}
+                      className="text-muted-foreground hover:text-accent transition-colors"
+                    >
+                      Contact
+                    </button>
                   </motion.div>
                 )}
               </AnimatePresence>

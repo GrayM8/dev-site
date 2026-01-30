@@ -126,7 +126,7 @@ export default function ProjectsPage() {
             </p>
           </motion.header>
 
-          {/* Projects Grid */}
+          {/* Projects List */}
           <div className="space-y-4">
             {projects.map((project, index) => (
               <ProjectCard key={project.slug} project={project} index={index} />

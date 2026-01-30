@@ -8,6 +8,7 @@ import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { projects } from "@/content/projects";
+import CardSwap, { Card } from "@/components/ui/CardSwap";
 
 interface SystemCardProps {
   title: string;
@@ -137,19 +138,64 @@ export function Systems() {
           })}
         </div>
 
+        {/* View All Projects Section with Card Swap */}
         <motion.div
-          className="mt-24 text-center"
+          className="mt-24"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <Link
-            href="/projects"
-            className="inline-flex items-center text-lg text-muted-foreground hover:text-accent transition-colors group"
-          >
-            View all projects <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
-          </Link>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+            {/* Text and Link - Left */}
+            <div className="flex flex-col gap-4">
+              <h3 className="text-2xl font-bold text-foreground">
+                More Projects
+              </h3>
+              <p className="text-muted-foreground max-w-md">
+                Explore the full collection of tools, experiments, and applications.
+              </p>
+              <Link
+                href="/projects"
+                className="inline-flex items-center text-lg text-foreground hover:text-accent transition-colors group mt-2"
+              >
+                View all projects <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
+
+            {/* Card Swap Display - Right */}
+            <div className="relative h-[180px] w-full md:w-[320px] shrink-0 hidden md:block">
+              <CardSwap
+                width={200}
+                height={125}
+                cardDistance={30}
+                verticalDistance={30}
+                delay={4000}
+                pauseOnHover={true}
+                skewAmount={4}
+                easing="elastic"
+              >
+                {projects
+                  .filter((p) => p.image)
+                  .slice(0, 5)
+                  .map((project) => (
+                    <Card key={project.slug}>
+                      <div className="relative w-full h-full">
+                        <div className="absolute inset-0 bg-gradient-to-br from-accent/20 via-background to-card" />
+                        <div className="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                          <h4 className="text-xs font-medium text-white truncate">
+                            {project.title}
+                          </h4>
+                          <p className="text-[10px] text-white/60 truncate">
+                            {project.tagline}
+                          </p>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+              </CardSwap>
+            </div>
+          </div>
         </motion.div>
       </Container>
     </Section>
