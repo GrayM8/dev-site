@@ -99,10 +99,38 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image: radial-gradient(circle at 50% 0%, oklch(0.16 0 0) 0%, oklch(0.12 0 0) 60%);
+    background-attachment: fixed;
   }
 }
 
-/* Energy Border Glow Animation */
+/* Elegant Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.25 0 0);
+  border: 2px solid var(--background);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.35 0 0);
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.25 0 0) var(--background);
+}
+
+/* Energy Border Animations */
 @keyframes energyPulse {
   0%, 100% {
     opacity: 1;

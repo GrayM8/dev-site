@@ -335,6 +335,7 @@ export function LaserFlow({
     canvas.style.width = '100%';
     canvas.style.height = '100%';
     canvas.style.display = 'block';
+    canvas.style.background = 'transparent';
     mount.appendChild(canvas);
 
     const scene = new THREE.Scene();
@@ -376,7 +377,7 @@ export function LaserFlow({
       transparent: true,
       depthTest: false,
       depthWrite: false,
-      blending: THREE.NormalBlending
+      blending: THREE.AdditiveBlending
     });
 
     const mesh = new THREE.Mesh(geometry, material);

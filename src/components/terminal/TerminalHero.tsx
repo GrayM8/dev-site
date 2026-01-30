@@ -59,15 +59,15 @@ export function TerminalHero({ scrollY }: TerminalHeroProps) {
       if (isMounted) {
         setLines(prev => [
           ...prev,
-          <div key="output" className="mt-4 mb-6 flex items-start gap-6 animate-in fade-in slide-in-from-left-2 duration-500">
-             <div className="shrink-0 w-20 h-20 md:w-24 md:h-24 rounded bg-muted border border-border flex items-center justify-center overflow-hidden relative">
+          <div key="output" className="mt-12 mb-12 flex items-center justify-center gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+             <div className="shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-full bg-muted border-2 border-accent/20 flex items-center justify-center overflow-hidden relative shadow-lg">
                <User className="w-10 h-10 text-muted-foreground/50" />
                <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 to-transparent" />
              </div>
-             <div>
-               <div className="text-xl md:text-2xl font-bold text-foreground">Gray Marshall</div>
-               <div className="text-muted-foreground mt-1 text-sm md:text-base">Full Stack Engineer</div>
-               <div className="text-accent/80 text-xs font-mono mt-2">@graymarshall</div>
+             <div className="text-left">
+               <div className="text-xl md:text-3xl font-bold text-foreground tracking-tight">Hey, I'm Gray Marshall.</div>
+               <div className="text-muted-foreground mt-2 text-sm md:text-base font-medium">Software Engineer & Full-Stack @ LHRE</div>
+               <div className="text-muted-foreground/80 text-sm md:text-base">CS @ UT Austin • Co-Founder @ LSR</div>
              </div>
           </div>,
           <div key="spacer" className="h-4" />
