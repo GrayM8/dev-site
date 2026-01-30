@@ -104,7 +104,7 @@ export function TerminalHero({ scrollY }: TerminalHeroProps) {
         
         {/* Base Layer (Chassis) - The "Thickness" */}
         <motion.div
-          className="absolute inset-0 bg-[#050505] z-0"
+          className="absolute inset-0 bg-[#050505] shadow-2xl z-0"
           style={{
             borderRadius,
             y: chassisY,
@@ -114,11 +114,40 @@ export function TerminalHero({ scrollY }: TerminalHeroProps) {
           }}
         />
 
+        {/* Energy Border Glow - matches LaserFlow */}
+        <motion.div
+          className="absolute -inset-[1px] z-[5] rounded-xl"
+          style={{
+            borderRadius,
+            opacity: heroContentOpacity,
+            background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.6) 0%, rgba(139, 92, 246, 0.3) 50%, rgba(99, 102, 241, 0.1) 100%)',
+            filter: 'blur(1px)',
+          }}
+        />
+        <motion.div
+          className="absolute -inset-[2px] z-[4] rounded-xl energy-border-glow"
+          style={{
+            borderRadius,
+            opacity: heroContentOpacity,
+            background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.4) 0%, rgba(139, 92, 246, 0.2) 50%, rgba(99, 102, 241, 0.05) 100%)',
+            filter: 'blur(4px)',
+          }}
+        />
+        <motion.div
+          className="absolute -inset-[4px] z-[3] rounded-xl"
+          style={{
+            borderRadius,
+            opacity: heroContentOpacity,
+            background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.1) 50%, rgba(99, 102, 241, 0.02) 100%)',
+            filter: 'blur(8px)',
+          }}
+        />
+
         {/* Top Layer (Face) - The Terminal */}
-        <motion.div 
+        <motion.div
           className={cn(
             "relative z-10 bg-[#101010] overflow-hidden transition-colors",
-            "shadow-xl ring-1 ring-white/5 border-t border-t-white/10 border-b border-b-black/80", // Stronger bottom cut
+            "shadow-xl ring-1 ring-white/5 border-t border-t-white/10 border-b border-b-black/80",
             isHeaderMode ? "border-b border-border" : ""
           )}
           style={{

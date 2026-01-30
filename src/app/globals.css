@@ -101,3 +101,29 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Energy Border Glow Animation */
+@keyframes energyPulse {
+  0%, 100% {
+    opacity: 1;
+    filter: blur(4px);
+  }
+  50% {
+    opacity: 0.7;
+    filter: blur(6px);
+  }
+}
+
+.energy-border-glow {
+  animation: energyPulse 4s ease-in-out infinite;
+}
+
+/* LaserFlow & Animations - Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  canvas {
+    animation: none !important;
+  }
+  .energy-border-glow {
+    animation: none !important;
+  }
+}
