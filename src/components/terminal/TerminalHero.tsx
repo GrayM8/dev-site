@@ -231,12 +231,15 @@ export function TerminalHero({ scrollY }: TerminalHeroProps) {
             style={{ opacity: headerContentOpacity }}
           >
             {/* Left: Identity */}
-            <div className="flex items-center gap-3 relative z-10 w-[200px]">
-                <div className="w-8 h-8 rounded bg-muted border border-border flex items-center justify-center text-accent shrink-0">
+            <div 
+              className="flex items-center gap-3 relative z-10 w-[200px] cursor-pointer group"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
+                <div className="w-8 h-8 rounded bg-muted border border-border flex items-center justify-center text-accent shrink-0 transition-transform group-hover:scale-105">
                   <span className="font-bold text-xs">GM</span>
                 </div>
                 <div className="hidden sm:block overflow-hidden h-8 flex flex-col justify-center">
-                  <div className="font-bold text-sm leading-none">Gray Marshall</div>
+                  <div className="font-bold text-sm leading-none transition-colors group-hover:text-accent">Gray Marshall</div>
                   <AnimatePresence mode="wait">
                     {leftPhase === "running" ? (
                       <motion.div

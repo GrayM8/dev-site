@@ -1,5 +1,6 @@
 import React from "react";
 import { Container } from "@/components/layout/Container";
+import { socialLinks } from "@/content/social";
 
 export function Footer() {
   return (
@@ -12,9 +13,15 @@ export function Footer() {
           
           <div className="flex gap-6">
             <span>© {new Date().getFullYear()}</span>
-            <a href="https://github.com" className="hover:text-foreground transition-colors">GitHub</a>
-            <a href="https://linkedin.com" className="hover:text-foreground transition-colors">LinkedIn</a>
-            <a href="mailto:hello@example.com" className="hover:text-foreground transition-colors">Email</a>
+            {socialLinks.map((link) => (
+              <a 
+                key={link.id} 
+                href={link.href} 
+                className="hover:text-foreground transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
         </div>
       </Container>

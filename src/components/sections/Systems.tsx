@@ -1,67 +1,13 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-
-interface SystemProject {
-  title: string;
-  slug: string;
-  tagline: string;
-  description: string[];
-  tech: string[];
-}
-
-const systems: SystemProject[] = [
-  {
-    title: "lofi.world",
-    slug: "lofi-world",
-    tagline: "Immersive Audio Environment",
-    description: [
-      "A real-time collaborative audio space for focus and productivity.",
-      "Optimized audio streaming with minimal latency.",
-      "Served over 10k monthly active users."
-    ],
-    tech: ["Next.js", "Web Audio API", "Supabase"]
-  },
-  {
-    title: "Longhorn Sim Racing",
-    slug: "longhorn-sim-racing",
-    tagline: "Competition Management Platform",
-    description: [
-      "Centralized hub for league management and driver statistics.",
-      "Automated race result ingestion and leaderboard processing.",
-      "Reduced administrative workload by 80%."
-    ],
-    tech: ["React", "PostgreSQL", "Node.js"]
-  },
-  {
-    title: "Telemetry Dashboard",
-    slug: "telemetry-dashboard",
-    tagline: "Real-Time Vehicle Analytics",
-    description: [
-      "Visualizes sensor data from competition vehicles in real-time.",
-      "Custom WebSocket implementation for sub-50ms latency.",
-      "Used by engineering teams for track-side analysis."
-    ],
-    tech: ["TypeScript", "D3.js", "WebSockets"]
-  },
-  {
-    title: "Multiplayer Room System",
-    slug: "multiplayer-room-system",
-    tagline: "Scalable Game Networking",
-    description: [
-      "Framework-agnostic lobby and state synchronization system.",
-      "Handles state reconciliation and authoritative server logic.",
-      "Designed for drop-in integration with existing engines."
-    ],
-    tech: ["Rust", "Redis", "gRPC"]
-  }
-];
+import { projects } from "@/content/projects";
 
 function SystemCard({ title, isEven }: { title: string; isEven: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -89,8 +35,6 @@ function SystemCard({ title, isEven }: { title: string; isEven: boolean }) {
     const yPct = (e.clientY - rect.top) / rect.height - 0.5;
 
     // Calculate tilt (Max +/- 15deg swing)
-    // RotateY corresponds to X axis movement (left/right tilt)
-    // RotateX corresponds to Y axis movement (up/down tilt) - Inverted for natural feel
     targetRotateY.set(xPct * 30); 
     targetRotateX.set(yPct * -30);
     scale.set(1.05);
@@ -129,12 +73,12 @@ function SystemCard({ title, isEven }: { title: string; isEven: boolean }) {
 
 export function Systems() {
   return (
-    <Section>
+    <Section id="systems">
       <Container>
         <h2 className="text-2xl font-bold mb-16 text-foreground">Systems</h2>
         
         <div className="space-y-24 md:space-y-32">
-          {systems.map((system, index) => {
+          {projects.map((system, index) => {
             const isEven = index % 2 === 0;
             return (
               <motion.div 

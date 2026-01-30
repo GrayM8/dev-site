@@ -1,41 +1,61 @@
 export interface Project {
-  slug: string;
   title: string;
+  slug: string;
   tagline: string;
-  description: string;
+  description: string[];
   tech: string[];
   status: "Live" | "In Development" | "Archived";
-  link?: string;
   repo?: string;
+  link?: string;
 }
 
 export const projects: Project[] = [
   {
-    slug: "design-system-core",
-    title: "Design System Core",
-    tagline: "A framework-agnostic component library for enterprise apps.",
-    description: "Built to solve consistency issues across 5 different products. Reduced UI debt by 40% and improved accessibility scores significantly.",
-    tech: ["TypeScript", "React", "Tailwind", "Storybook"],
-    status: "Live",
-    link: "https://example.com",
-    repo: "https://github.com/example/design-system"
+    title: "Longhorn Sim Racing",
+    slug: "longhorn-sim-racing",
+    tagline: "Events & Competition Management Platform",
+    description: [
+      "Centralized hub for league management and driver statistics.",
+      "Automated race result ingestion and leaderboard processing.",
+      "Reduced administrative workload by 80%."
+    ],
+    tech: ["React", "PostgreSQL", "Next.js"],
+    status: "Live"
   },
   {
-    slug: "dev-terminal",
-    title: "DevTerminal",
-    tagline: "A browser-based CLI for managing cloud resources.",
-    description: "Experimental interface combining the speed of CLI with the visual feedback of a dashboard. specific focus on AWS/Vercel integrations.",
-    tech: ["Rust", "WebAssembly", "Next.js"],
-    status: "In Development",
-    repo: "https://github.com/example/dev-terminal"
+    title: "FSAE Telemetry Webtool",
+    slug: "telemetry-webtool",
+    tagline: "Real-Time Vehicle Analytics",
+    description: [
+      "Visualizes sensor data from competition vehicles in real-time.",
+      "Custom WebSocket implementation for sub-50ms latency.",
+      "Used by engineering teams for track-side analysis."
+    ],
+    tech: ["TypeScript", "D3.js", "WebSockets"],
+    status: "In Development"
   },
   {
-    slug: "async-notes",
-    title: "Async Notes",
-    tagline: "Local-first note taking app with p2p sync.",
-    description: "Leveraging CRDTs for conflict-free editing. Designed for offline-first workflows and privacy.",
-    tech: ["Svelte", "Yjs", "IndexedDB"],
-    status: "Archived",
-    repo: "https://github.com/example/async-notes"
-  }
+    title: "Legacy Portfolio Website",
+    slug: "legacy-site",
+    tagline: "Project & Experience Display",
+    description: [
+      "Framework-agnostic lobby and state synchronization system.",
+      "Handles state reconciliation and authoritative server logic.",
+      "Designed for drop-in integration with existing engines."
+    ],
+    tech: ["Rust", "Redis", "gRPC"],
+    status: "Archived"
+  },
+  {
+    title: "Portfolio Website",
+    slug: "dev-site",
+    tagline: "Reimagined Portfolio Website",
+    description: [
+      "Framework-agnostic lobby and state synchronization system.",
+      "Handles state reconciliation and authoritative server logic.",
+      "Designed for drop-in integration with existing engines."
+    ],
+    tech: ["Rust", "Redis", "gRPC"],
+    status: "Archived"
+  },
 ];
