@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { projects } from "@/content/projects";
 
-function SystemCard({ title, isEven }: { title: string; isEven: boolean }) {
+export function SystemCard({ title, isEven }: { title: string; isEven: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   
   // Default resting angles

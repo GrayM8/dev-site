@@ -7,17 +7,18 @@ import { User, Download } from "lucide-react";
 
 interface TerminalHeroProps {
   scrollY: MotionValue<number>;
+  alwaysHeader?: boolean;
 }
 
-export function TerminalHero({ scrollY }: TerminalHeroProps) {
-  const [isWhoamiDone, setIsWhoamiDone] = useState(false);
+export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProps) {
+  const [isWhoamiDone, setIsWhoamiDone] = useState(alwaysHeader);
   const [lines, setLines] = useState<React.ReactNode[]>([]);
-  const [isHeaderMode, setIsHeaderMode] = useState(false);
+  const [isHeaderMode, setIsHeaderMode] = useState(alwaysHeader);
   
   // Animation Phases
-  const [headerPhase, setHeaderPhase] = useState<"boot" | "nav">("boot");
-  const [leftPhase, setLeftPhase] = useState<"running" | "role">("running");
-  const [rightPhase, setRightPhase] = useState<"active" | "resume">("active");
+  const [headerPhase, setHeaderPhase] = useState<"boot" | "nav">(alwaysHeader ? "nav" : "boot");
+  const [leftPhase, setLeftPhase] = useState<"running" | "role">(alwaysHeader ? "role" : "running");
+  const [rightPhase, setRightPhase] = useState<"active" | "resume">(alwaysHeader ? "active" : "active"); // Status usually active initially
 
   // --- Scroll Mappings (Pixels) ---
   // 0 - 500px: Type "npm run dev"
@@ -26,22 +27,23 @@ export function TerminalHero({ scrollY }: TerminalHeroProps) {
   const commandLength = useTransform(scrollY, [0, 500], [0, 11]); // "npm run dev"
   
   // Layout Transforms for Smooth Morph
-  const marginTop = useTransform(scrollY, [500, 700], ["50vh", "0vh"]);
-  const y = useTransform(scrollY, [500, 700], ["-50%", "0%"]);
-  const maxWidth = useTransform(scrollY, [500, 700], ["46rem", "100vw"]); // Increased scale
-  const borderRadius = useTransform(scrollY, [500, 700], [12, 0]);
+  const marginTop = useTransform(scrollY, [500, 700], [alwaysHeader ? "0vh" : "50vh", "0vh"]);
+  const y = useTransform(scrollY, [500, 700], [alwaysHeader ? "0%" : "-50%", "0%"]);
+  const maxWidth = useTransform(scrollY, [500, 700], [alwaysHeader ? "100vw" : "46rem", "100vw"]); 
+  const borderRadius = useTransform(scrollY, [500, 700], [alwaysHeader ? 0 : 12, 0]);
   
   // Physical / 3D Transforms
-  const rotation = useTransform(scrollY, [0, 500], [1, 0]); // Subtle rotateX
-  const chassisY = useTransform(scrollY, [500, 700], [12, 0]); // Chassis thickness collapses
-  const chassisOpacity = useTransform(scrollY, [500, 650], [1, 0]); // Chassis fades out
+  const rotation = useTransform(scrollY, [0, 500], [alwaysHeader ? 0 : 1, 0]); 
+  const chassisY = useTransform(scrollY, [500, 700], [alwaysHeader ? 0 : 12, 0]); 
+  const chassisOpacity = useTransform(scrollY, [500, 650], [alwaysHeader ? 0 : 1, 0]); 
   
   // Opacity Transforms for Content Switching
-  const heroContentOpacity = useTransform(scrollY, [500, 600], [1, 0]);
-  const headerContentOpacity = useTransform(scrollY, [600, 700], [0, 1]);
+  const heroContentOpacity = useTransform(scrollY, [500, 600], [alwaysHeader ? 0 : 1, 0]);
+  const headerContentOpacity = useTransform(scrollY, [600, 700], [alwaysHeader ? 1 : 0, 1]);
   
   // State for DOM switching
   useMotionValueEvent(scrollY, "change", (latest) => {
+    if (alwaysHeader) return; // Prevent scroll interaction if forced
     if (latest > 600 && !isHeaderMode) setIsHeaderMode(true);
     if (latest <= 600 && isHeaderMode) {
       setIsHeaderMode(false);
@@ -54,6 +56,7 @@ export function TerminalHero({ scrollY }: TerminalHeroProps) {
 
   // Header Animation Sequence
   useEffect(() => {
+    if (alwaysHeader) return; // Skip sequence if already header
     if (isHeaderMode) {
       const t1 = setTimeout(() => setHeaderPhase("nav"), 2000);
       const t2 = setTimeout(() => setLeftPhase("role"), 3000);
@@ -65,10 +68,11 @@ export function TerminalHero({ scrollY }: TerminalHeroProps) {
         clearTimeout(t3);
       };
     }
-  }, [isHeaderMode]);
+  }, [isHeaderMode, alwaysHeader]);
 
   // Initial "whoami" sequence
   useEffect(() => {
+    if (alwaysHeader) return;
     let isMounted = true;
     
     const sequence = async () => {
