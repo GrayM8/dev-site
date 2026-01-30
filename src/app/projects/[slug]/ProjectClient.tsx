@@ -137,6 +137,7 @@ export function ProjectClient({ project }: { project: Project }) {
               <SystemCard
                 title={project.title}
                 isEven={false}
+                image={project.image}
                 className="w-full lg:w-[420px] aspect-video shrink-0"
               />
             </div>

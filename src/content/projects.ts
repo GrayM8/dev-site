@@ -6,9 +6,15 @@ export interface Project {
   tech: string[];
   status: "Live" | "In Development" | "Archived";
   featured?: boolean;
+  /** Filename of the project image (e.g., "my-project.jpg"). Images are stored in /public/project-images/ */
   image?: string;
   repo?: string;
   link?: string;
+}
+
+/** Helper to get the full image path for a project */
+export function getProjectImagePath(filename: string): string {
+  return `/project-images/${filename}`;
 }
 
 export const projects: Project[] = [
@@ -24,7 +30,7 @@ export const projects: Project[] = [
     tech: ["React", "PostgreSQL", "Next.js"],
     status: "Live",
     featured: true,
-    image: "/projects/sim-racing.jpg"
+    image: "lsr-og.png"
   },
   {
     title: "FSAE Telemetry Webtool",
@@ -38,7 +44,7 @@ export const projects: Project[] = [
     tech: ["TypeScript", "D3.js", "WebSockets"],
     status: "In Development",
     featured: true,
-    image: "/projects/telemetry.jpg"
+    image: "telemetry.jpg"
   },
   {
     title: "Legacy Portfolio Website",
@@ -77,7 +83,7 @@ export const projects: Project[] = [
     ],
     tech: ["Go", "React", "Terraform", "GraphQL"],
     status: "Live",
-    image: "/projects/cloud-dashboard.jpg"
+    image: "cloud-dashboard.jpg"
   },
   {
     title: "Neural Style Transfer App",
@@ -90,7 +96,7 @@ export const projects: Project[] = [
     ],
     tech: ["Python", "PyTorch", "FastAPI", "React Native"],
     status: "Live",
-    image: "/projects/neural-style.jpg"
+    image: "neural-style.jpg"
   },
   {
     title: "Distributed Task Queue",
@@ -103,6 +109,6 @@ export const projects: Project[] = [
     ],
     tech: ["Rust", "Redis", "PostgreSQL", "Prometheus"],
     status: "In Development",
-    image: "/projects/task-queue.jpg"
+    image: "task-queue.jpg"
   }
 ];

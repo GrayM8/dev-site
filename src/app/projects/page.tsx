@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { Container } from "@/components/layout/Container";
-import { projects, Project } from "@/content/projects";
+import { projects, Project, getProjectImagePath } from "@/content/projects";
 import { Footer } from "@/components/sections/Footer";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -40,9 +41,47 @@ function ProjectCard({
     >
       <Link
         href={`/projects/${project.slug}`}
-        className="group block p-6 md:p-8 rounded-lg bg-card/50 border border-border hover:border-accent/50 transition-all duration-300"
+        className="group block p-6 md:p-8 rounded-lg bg-card/50 border border-border hover:border-accent/50 transition-all duration-300 relative overflow-hidden"
       >
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+        {/* Background Image with Radial Vignette */}
+        {project.image && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div
+              className="absolute inset-0"
+              style={{
+                perspective: "600px",
+                perspectiveOrigin: "85% 50%"
+              }}
+            >
+              <div
+                className="absolute aspect-video"
+                style={{
+                  width: "300px",
+                  left: "55%",
+                  top: "50%",
+                  transform: "translateY(-50%) rotateX(50deg) rotateZ(20deg) scale(2.2)",
+                  transformOrigin: "center center"
+                }}
+              >
+                <Image
+                  src={getProjectImagePath(project.image)}
+                  alt=""
+                  fill
+                  className="object-cover object-center rounded-lg"
+                />
+              </div>
+            </div>
+            {/* Radial vignette - visible from 50% to 90% of tile width, curved edges only on left and right */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: "radial-gradient(ellipse 40% 160% at 70% 50%, transparent 30%, rgba(10, 10, 10, 0.9) 55%, rgb(10, 10, 10) 65%)"
+              }}
+            />
+          </div>
+        )}
+
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 relative z-10">
           <div className="flex-1">
             <div className="flex flex-wrap items-center gap-3 mb-2">
               <h2 className="text-xl md:text-2xl font-medium text-foreground group-hover:text-accent transition-colors">

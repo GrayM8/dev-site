@@ -1,22 +1,24 @@
 "use client";
 
 import React, { useRef } from "react";
+import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { projects } from "@/content/projects";
+import { projects, getProjectImagePath } from "@/content/projects";
 import CardSwap, { Card } from "@/components/ui/CardSwap";
 
 interface SystemCardProps {
   title: string;
   isEven: boolean;
   className?: string;
+  image?: string;
 }
 
-export function SystemCard({ title, isEven, className }: SystemCardProps) {
+export function SystemCard({ title, isEven, className, image }: SystemCardProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   // Default resting angles
@@ -67,10 +69,21 @@ export function SystemCard({ title, isEven, className }: SystemCardProps) {
           transformStyle: "preserve-3d"
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-50 pointer-events-none" />
-        <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/20 font-mono text-sm pointer-events-none">
-          [ Project Preview: {title} ]
-        </div>
+        {image ? (
+          <Image
+            src={getProjectImagePath(image)}
+            alt={title}
+            fill
+            className="object-cover pointer-events-none"
+          />
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-50 pointer-events-none" />
+            <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/20 font-mono text-sm pointer-events-none">
+              [ Project Preview: {title} ]
+            </div>
+          </>
+        )}
       </motion.div>
     </div>
   );
@@ -100,7 +113,7 @@ export function Systems() {
                 transition={{ duration: 0.8, ease: "easeOut" }}
               >
                 {/* Interactive Angled Screen */}
-                <SystemCard title={system.title} isEven={isEven} className="aspect-video" />
+                <SystemCard title={system.title} isEven={isEven} image={system.image} className="aspect-video" />
 
                 {/* Content */}
                 <div className="w-full md:w-1/2 space-y-6">
@@ -181,7 +194,12 @@ export function Systems() {
                   .map((project) => (
                     <Card key={project.slug}>
                       <div className="relative w-full h-full">
-                        <div className="absolute inset-0 bg-gradient-to-br from-accent/20 via-background to-card" />
+                        <Image
+                          src={getProjectImagePath(project.image!)}
+                          alt={project.title}
+                          fill
+                          className="object-cover"
+                        />
                         <div className="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
                           <h4 className="text-xs font-medium text-white truncate">
                             {project.title}
