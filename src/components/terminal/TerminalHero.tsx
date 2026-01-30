@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, useTransform, MotionValue, useMotionValueEvent } from "framer-motion";
+import { motion, useTransform, MotionValue, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { User } from "lucide-react";
+import { User, Download } from "lucide-react";
 
 interface TerminalHeroProps {
   scrollY: MotionValue<number>;
@@ -13,6 +13,11 @@ export function TerminalHero({ scrollY }: TerminalHeroProps) {
   const [isWhoamiDone, setIsWhoamiDone] = useState(false);
   const [lines, setLines] = useState<React.ReactNode[]>([]);
   const [isHeaderMode, setIsHeaderMode] = useState(false);
+  
+  // Animation Phases
+  const [headerPhase, setHeaderPhase] = useState<"boot" | "nav">("boot");
+  const [leftPhase, setLeftPhase] = useState<"running" | "role">("running");
+  const [rightPhase, setRightPhase] = useState<"active" | "resume">("active");
 
   // --- Scroll Mappings (Pixels) ---
   // 0 - 500px: Type "npm run dev"
@@ -38,8 +43,29 @@ export function TerminalHero({ scrollY }: TerminalHeroProps) {
   // State for DOM switching
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (latest > 600 && !isHeaderMode) setIsHeaderMode(true);
-    if (latest <= 600 && isHeaderMode) setIsHeaderMode(false);
+    if (latest <= 600 && isHeaderMode) {
+      setIsHeaderMode(false);
+      // Reset all phases
+      setHeaderPhase("boot");
+      setLeftPhase("running");
+      setRightPhase("active");
+    }
   });
+
+  // Header Animation Sequence
+  useEffect(() => {
+    if (isHeaderMode) {
+      const t1 = setTimeout(() => setHeaderPhase("nav"), 2000);
+      const t2 = setTimeout(() => setLeftPhase("role"), 3000);
+      const t3 = setTimeout(() => setRightPhase("resume"), 4000);
+      
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        clearTimeout(t3);
+      };
+    }
+  }, [isHeaderMode]);
 
   // Initial "whoami" sequence
   useEffect(() => {
@@ -85,6 +111,22 @@ export function TerminalHero({ scrollY }: TerminalHeroProps) {
     const text = "npm run dev";
     setTypedCommand(text.slice(0, Math.round(latest)));
   });
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 80;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+  };
 
   return (
     <motion.div 
@@ -185,23 +227,112 @@ export function TerminalHero({ scrollY }: TerminalHeroProps) {
 
           {/* Header Mode Content */}
           <motion.div 
-            className={cn("flex items-center justify-between px-6 h-16 w-full max-w-5xl mx-auto", !isHeaderMode && "hidden")}
+            className={cn("flex items-center justify-between px-6 h-16 w-full max-w-5xl mx-auto relative", !isHeaderMode && "hidden")}
             style={{ opacity: headerContentOpacity }}
           >
-            <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded bg-muted border border-border flex items-center justify-center text-accent">
+            {/* Left: Identity */}
+            <div className="flex items-center gap-3 relative z-10 w-[200px]">
+                <div className="w-8 h-8 rounded bg-muted border border-border flex items-center justify-center text-accent shrink-0">
                   <span className="font-bold text-xs">GM</span>
                 </div>
-                <div>
+                <div className="hidden sm:block overflow-hidden h-8 flex flex-col justify-center">
                   <div className="font-bold text-sm leading-none">Gray Marshall</div>
-                  <div className="text-[10px] text-muted-foreground font-mono">npm run dev: running...</div>
+                  <AnimatePresence mode="wait">
+                    {leftPhase === "running" ? (
+                      <motion.div
+                        key="running"
+                        initial={{ y: 5, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: -5, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="text-[10px] text-muted-foreground font-mono"
+                      >
+                        npm run dev: running...
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="role"
+                        initial={{ y: 5, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="text-[10px] text-accent font-medium"
+                      >
+                        Full Stack Developer
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
             </div>
-            <div className="flex items-center gap-4 text-xs font-mono text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  <span className="hidden sm:inline">Server Active</span>
-                </div>
+
+            {/* Center: Animated Sequence */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[200px] sm:max-w-md flex justify-center z-0">
+              <AnimatePresence mode="wait">
+                {headerPhase === "boot" ? (
+                  <motion.div 
+                    key="boot"
+                    className="flex flex-col items-center justify-center font-mono text-xs"
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -10, opacity: 0 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <div className="text-muted-foreground whitespace-nowrap">Local: <span className="text-foreground">http://localhost:3000</span></div>
+                    <div className="text-accent mt-0.5 text-[10px]">✓ Ready in 800ms</div>
+                  </motion.div>
+                ) : (
+                  <motion.div 
+                    key="nav"
+                    className="flex gap-4 sm:gap-6 text-sm font-medium"
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    {["About", "Systems", "Experience"].map((item) => (
+                      <button 
+                        key={item}
+                        onClick={() => scrollToSection(item.toLowerCase())}
+                        className="text-muted-foreground hover:text-accent transition-colors"
+                      >
+                        {item}
+                      </button>
+                    ))}
+                    {/* Hide extra links on tiny screens if needed, or keep succinct */}
+                    <button onClick={() => scrollToSection("contact")} className="text-muted-foreground hover:text-accent transition-colors">Contact</button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Right: Status */}
+            <div className="flex items-center justify-end gap-4 text-xs font-mono text-muted-foreground relative z-10 w-[200px]">
+              <AnimatePresence mode="wait">
+                {rightPhase === "active" ? (
+                  <motion.div
+                    key="active"
+                    initial={{ y: 5, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -5, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex items-center gap-2"
+                  >
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="hidden sm:inline">Server Active</span>
+                  </motion.div>
+                ) : (
+                  <motion.a
+                    key="resume"
+                    href="/resume.pdf"
+                    target="_blank"
+                    initial={{ y: 5, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex items-center gap-2 text-foreground hover:text-accent transition-colors cursor-pointer group"
+                  >
+                    <Download className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+                    <span className="hidden sm:inline font-medium">Resume</span>
+                  </motion.a>
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
         
