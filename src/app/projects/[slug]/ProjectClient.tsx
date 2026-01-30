@@ -2,147 +2,276 @@
 
 import React from "react";
 import { Container } from "@/components/layout/Container";
-import { Section } from "@/components/layout/Section";
-import { TerminalHero } from "@/components/terminal/TerminalHero";
 import { Footer } from "@/components/sections/Footer";
+import { Project, projects } from "@/content/projects";
 import { SystemCard } from "@/components/sections/Systems";
-import { Project } from "@/content/projects";
 import Link from "next/link";
-import { ArrowLeft, Github, Globe } from "lucide-react";
-import { useScroll } from "framer-motion";
+import { ArrowLeft, ArrowRight, Github, ExternalLink } from "lucide-react";
+import { motion, useScroll } from "framer-motion";
+import { TerminalHero } from "@/components/terminal/TerminalHero";
+
+function StatusBadge({ status }: { status: Project["status"] }) {
+  const colors = {
+    Live: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    "In Development": "bg-amber-500/10 text-amber-400 border-amber-500/20",
+    Archived: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
+  };
+
+  return (
+    <span
+      className={`px-3 py-1 text-xs font-mono uppercase tracking-wider rounded-full border ${colors[status]}`}
+    >
+      {status}
+    </span>
+  );
+}
+
+function RelatedProjectCard({ project }: { project: Project }) {
+  return (
+    <Link
+      href={`/projects/${project.slug}`}
+      className="group block p-6 rounded-lg bg-card/50 border border-border hover:border-accent/50 transition-all duration-300"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1 min-w-0">
+          <h4 className="text-lg font-medium text-foreground group-hover:text-accent transition-colors truncate">
+            {project.title}
+          </h4>
+          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+            {project.tagline}
+          </p>
+        </div>
+        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-accent group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+      </div>
+    </Link>
+  );
+}
 
 export function ProjectClient({ project }: { project: Project }) {
   const { scrollY } = useScroll();
 
+  // Get related projects (other projects, excluding current)
+  const relatedProjects = projects
+    .filter((p) => p.slug !== project.slug)
+    .slice(0, 2);
+
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      {/* Header Layer */}
+    <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
+      {/* Fixed Header */}
       <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
         <div className="pointer-events-auto">
           <TerminalHero scrollY={scrollY} alwaysHeader={true} />
         </div>
       </div>
 
-      <Container className="pt-32 pb-12 md:pb-20">
-        <Link 
-          href="/" 
-          className="inline-flex items-center text-sm text-muted-foreground hover:text-accent transition-colors mb-8 group"
-        >
-          <ArrowLeft className="mr-2 w-4 h-4 transition-transform group-hover:-translate-x-1" />
-          Back to Home
-        </Link>
+      {/* Content */}
+      <div className="relative z-10">
+        <Container className="pt-28 pb-16">
+          {/* Back Link */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <Link
+              href="/projects"
+              className="inline-flex items-center text-sm text-muted-foreground hover:text-accent transition-colors mb-12 group"
+            >
+              <ArrowLeft className="mr-2 w-4 h-4 transition-transform group-hover:-translate-x-1" />
+              All Projects
+            </Link>
+          </motion.div>
 
-        <Section className="py-0 md:py-0 space-y-12">
-          {/* Header with Title and Angled Screen */}
-          <header className="border-b border-border pb-12">
-            <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-12">
-              <div className="flex-1 space-y-6">
-                <div>
-                  <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">
-                    {project.title}
-                  </h1>
-                  <p className="text-xl text-muted-foreground max-w-2xl">
-                    {project.tagline}
-                  </p>
+          {/* Hero Section */}
+          <motion.header
+            className="mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-12">
+              {/* Left - Title & Info */}
+              <div className="flex-1">
+                <div className="flex flex-wrap items-center gap-3 mb-4">
+                  <StatusBadge status={project.status} />
                 </div>
 
-                <div className="flex gap-3">
-                  {project.repo && (
-                    <a 
-                      href={project.repo} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center px-4 py-2 rounded-md bg-card border border-border hover:border-accent hover:text-accent transition-colors text-sm font-medium"
-                    >
-                      <Github className="w-4 h-4 mr-2" />
-                      Code
-                    </a>
-                  )}
-                  {project.link && (
-                    <a 
-                      href={project.link} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center px-4 py-2 rounded-md bg-foreground text-background hover:bg-accent hover:text-accent-foreground transition-colors text-sm font-medium"
-                    >
-                      <Globe className="w-4 h-4 mr-2" />
-                      Live Demo
-                    </a>
-                  )}
-                </div>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
+                  {project.title}
+                </h1>
 
-                <div className="flex flex-wrap gap-4 pt-4">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span className="font-mono text-xs uppercase tracking-wider">Status:</span>
-                    <span className="px-2 py-0.5 rounded-full bg-muted text-foreground text-xs font-medium">
-                      {project.status}
-                    </span>
+                <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
+                  {project.tagline}
+                </p>
+
+                {/* Action Buttons */}
+                {(project.repo || project.link) && (
+                  <div className="flex flex-wrap gap-3 mt-8">
+                    {project.link && (
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center px-5 py-2.5 rounded-lg bg-accent text-accent-foreground font-medium hover:bg-accent/90 transition-colors"
+                      >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        View Live
+                      </a>
+                    )}
+                    {project.repo && (
+                      <a
+                        href={project.repo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center px-5 py-2.5 rounded-lg bg-card border border-border text-foreground font-medium hover:border-accent/50 hover:text-accent transition-colors"
+                      >
+                        <Github className="w-4 h-4 mr-2" />
+                        Source Code
+                      </a>
+                    )}
                   </div>
-                  <div className="w-px h-4 bg-border self-center hidden md:block" />
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span className="font-mono text-xs uppercase tracking-wider">Tech:</span>
-                    <div className="flex gap-2">
-                      {project.tech.map(t => (
-                        <span key={t} className="text-foreground">{t}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                )}
               </div>
 
-              {/* Angled Tile (Facing Left - corresponds to isEven=true logic) */}
-              <div className="w-full md:w-1/2 max-w-md">
-                <SystemCard title={project.title} isEven={true} />
-              </div>
+              {/* Right - Screen Tile */}
+              <SystemCard
+                title={project.title}
+                isEven={false}
+                className="w-full lg:w-[420px] aspect-video shrink-0"
+              />
             </div>
-          </header>
+          </motion.header>
 
-          {/* Content */}
-          <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-12 pb-24">
-            <div className="prose prose-invert prose-lg max-w-none">
-              <h3 className="text-2xl font-semibold mb-4 text-foreground">Overview</h3>
-              <div className="space-y-4">
-                {project.description.map((p, i) => (
-                  <p key={i} className="text-muted-foreground leading-relaxed">
-                    {p}
-                  </p>
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
+            {/* Left Column - Description */}
+            <motion.div
+              className="lg:col-span-2 space-y-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <section>
+                <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6">
+                  Overview
+                </h2>
+                <div className="space-y-4">
+                  {project.description.map((paragraph, i) => (
+                    <p
+                      key={i}
+                      className="text-lg text-foreground/80 leading-relaxed"
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </section>
+
+              {/* Placeholder for future content */}
+              <section className="p-6 rounded-lg bg-card/30 border border-border/50 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-1 h-full bg-accent/50" />
+                <p className="text-sm text-muted-foreground italic pl-4">
+                  Detailed technical documentation, architecture diagrams, and
+                  implementation notes for this project are being prepared.
+                </p>
+              </section>
+            </motion.div>
+
+            {/* Right Column - Metadata */}
+            <motion.aside
+              className="space-y-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              {/* Tech Stack */}
+              <div className="p-6 rounded-lg bg-card/50 border border-border">
+                <h3 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-4">
+                  Tech Stack
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {project.tech.map((tech) => (
+                    <span
+                      key={tech}
+                      className="px-3 py-1.5 text-sm font-mono bg-accent/5 text-accent border border-accent/20 rounded-md"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quick Links */}
+              <div className="p-6 rounded-lg bg-card/50 border border-border">
+                <h3 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-4">
+                  Links
+                </h3>
+                <div className="space-y-3">
+                  {project.link && (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-sm text-foreground hover:text-accent transition-colors group"
+                    >
+                      <ExternalLink className="w-4 h-4 mr-3 text-muted-foreground group-hover:text-accent" />
+                      Live Application
+                    </a>
+                  )}
+                  {project.repo && (
+                    <a
+                      href={project.repo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-sm text-foreground hover:text-accent transition-colors group"
+                    >
+                      <Github className="w-4 h-4 mr-3 text-muted-foreground group-hover:text-accent" />
+                      GitHub Repository
+                    </a>
+                  )}
+                  {!project.link && !project.repo && (
+                    <p className="text-sm text-muted-foreground italic">
+                      No external links available
+                    </p>
+                  )}
+                </div>
+              </div>
+            </motion.aside>
+          </div>
+
+          {/* Related Projects */}
+          {relatedProjects.length > 0 && (
+            <motion.section
+              className="mt-24 pt-12 border-t border-border"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground">
+                  Other Projects
+                </h2>
+                <Link
+                  href="/projects"
+                  className="text-sm text-muted-foreground hover:text-accent transition-colors"
+                >
+                  View all
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {relatedProjects.map((relatedProject) => (
+                  <RelatedProjectCard
+                    key={relatedProject.slug}
+                    project={relatedProject}
+                  />
                 ))}
               </div>
-              
-              <div className="my-12 p-8 bg-muted/20 rounded-lg border border-white/5 relative overflow-hidden group">
-                <div className="absolute top-0 left-0 w-1 h-full bg-accent opacity-50" />
-                <p className="text-sm font-mono text-muted-foreground/80 italic relative z-10">
-                  Detailed technical case study, system architecture diagrams, and 
-                  performance benchmarks for {project.title} are currently being 
-                  compiled for the next iteration of this portfolio.
-                </p>
-              </div>
-            </div>
+            </motion.section>
+          )}
+        </Container>
 
-            {/* Sidebar / Metadata */}
-            <div className="space-y-8">
-              <div className="p-6 rounded-lg bg-card border border-border">
-                <h4 className="text-sm font-mono uppercase text-muted-foreground mb-4 tracking-widest">Core Capabilities</h4>
-                <ul className="space-y-3 text-sm">
-                  <li className="flex items-start">
-                    <span className="text-accent mr-2 mt-1 shrink-0">➜</span>
-                    <span>High-performance system architecture</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-accent mr-2 mt-1 shrink-0">➜</span>
-                    <span>Scalable data pipelines and state management</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-accent mr-2 mt-1 shrink-0">➜</span>
-                    <span>End-to-end integration and testing</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </Section>
-      </Container>
-      <Footer />
+        <Footer />
+      </div>
     </main>
   );
 }

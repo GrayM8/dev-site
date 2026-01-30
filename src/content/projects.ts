@@ -5,6 +5,7 @@ export interface Project {
   description: string[];
   tech: string[];
   status: "Live" | "In Development" | "Archived";
+  featured?: boolean;
   repo?: string;
   link?: string;
 }
@@ -20,7 +21,8 @@ export const projects: Project[] = [
       "Reduced administrative workload by 80%."
     ],
     tech: ["React", "PostgreSQL", "Next.js"],
-    status: "Live"
+    status: "Live",
+    featured: true
   },
   {
     title: "FSAE Telemetry Webtool",
@@ -32,7 +34,8 @@ export const projects: Project[] = [
       "Used by engineering teams for track-side analysis."
     ],
     tech: ["TypeScript", "D3.js", "WebSockets"],
-    status: "In Development"
+    status: "In Development",
+    featured: true
   },
   {
     title: "Legacy Portfolio Website",
@@ -44,7 +47,8 @@ export const projects: Project[] = [
       "Designed for drop-in integration with existing engines."
     ],
     tech: ["Rust", "Redis", "gRPC"],
-    status: "Archived"
+    status: "Archived",
+    featured: true
   },
   {
     title: "Portfolio Website",
@@ -56,6 +60,7 @@ export const projects: Project[] = [
       "Designed for drop-in integration with existing engines."
     ],
     tech: ["Rust", "Redis", "gRPC"],
-    status: "Archived"
+    status: "Archived",
+    featured: true
   },
 ];
