@@ -14,11 +14,17 @@ export function Education() {
             <div className="text-xs text-muted-foreground/60 mt-1">Class of 2025</div>
           </div>
           
-          <div className="w-full md:w-2/3">
-             <h3 className="text-lg font-semibold text-foreground">B.S. Computer Science</h3>
-             <p className="text-muted-foreground mt-2">
-               Focus on Systems Engineering and Computer Architecture.
-             </p>
+          <div className="w-full md:w-2/3 flex gap-4 md:gap-6">
+             <div className="w-12 h-12 shrink-0 rounded bg-muted/50 border border-white/5 flex items-center justify-center text-[10px] text-muted-foreground/40 font-mono mt-1">
+               LOGO
+             </div>
+             <div className="flex-1">
+               <h3 className="text-lg font-semibold text-foreground">B.S. Computer Science</h3>
+               <div className="text-accent text-sm md:hidden">The University of Texas at Austin</div>
+               <p className="text-muted-foreground mt-2">
+                 Focus on Systems Engineering and Computer Architecture.
+               </p>
+             </div>
           </div>
         </div>
       </Container>

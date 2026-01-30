@@ -45,20 +45,26 @@ export function Experience() {
                 <div className="font-mono text-sm text-muted-foreground pt-1.5">{role.period}</div>
               </div>
               
-              <div className="w-full md:w-2/3">
-                <div className="mb-4">
-                  <h3 className="text-xl font-semibold text-foreground">{role.title}</h3>
-                  <div className="text-accent text-base">{role.org}</div>
+              <div className="w-full md:w-2/3 flex gap-4 md:gap-6">
+                <div className="w-12 h-12 shrink-0 rounded bg-muted/50 border border-white/5 flex items-center justify-center text-[10px] text-muted-foreground/40 font-mono mt-1">
+                  LOGO
                 </div>
                 
-                <ul className="space-y-2 text-muted-foreground leading-relaxed">
-                  {role.impact.map((point, idx) => (
-                    <li key={idx} className="flex items-start">
-                       <span className="mr-2.5 mt-2 w-1 h-1 rounded-full bg-accent/50 shrink-0" />
-                       {point}
-                    </li>
-                  ))}
-                </ul>
+                <div className="flex-1">
+                  <div className="mb-4">
+                    <h3 className="text-xl font-semibold text-foreground">{role.title}</h3>
+                    <div className="text-accent text-base">{role.org}</div>
+                  </div>
+                  
+                  <ul className="space-y-2 text-muted-foreground leading-relaxed">
+                    {role.impact.map((point, idx) => (
+                      <li key={idx} className="flex items-start">
+                         <span className="mr-2.5 mt-2 w-1 h-1 rounded-full bg-accent/50 shrink-0" />
+                         {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           ))}
