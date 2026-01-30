@@ -1,9 +1,12 @@
-import React from "react";
+"use client";
+
+import React, { useRef, useState } from "react";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 
 interface SystemProject {
   title: string;
@@ -60,6 +63,70 @@ const systems: SystemProject[] = [
   }
 ];
 
+function SystemCard({ title, isEven }: { title: string; isEven: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  
+  // Default resting angles
+  const defaultRotateY = isEven ? 12 : -12;
+  const defaultRotateX = -6;
+
+  // Motion values
+  const targetRotateX = useMotionValue(defaultRotateX);
+  const targetRotateY = useMotionValue(defaultRotateY);
+  const scale = useMotionValue(1);
+
+  // Smooth springs
+  const rotateX = useSpring(targetRotateX, { stiffness: 300, damping: 20 });
+  const rotateY = useSpring(targetRotateY, { stiffness: 300, damping: 20 });
+  const scaleSpring = useSpring(scale, { stiffness: 300, damping: 20 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    
+    // Normalize mouse position (-0.5 to 0.5)
+    const xPct = (e.clientX - rect.left) / rect.width - 0.5;
+    const yPct = (e.clientY - rect.top) / rect.height - 0.5;
+
+    // Calculate tilt (Max +/- 15deg swing)
+    // RotateY corresponds to X axis movement (left/right tilt)
+    // RotateX corresponds to Y axis movement (up/down tilt) - Inverted for natural feel
+    targetRotateY.set(xPct * 30); 
+    targetRotateX.set(yPct * -30);
+    scale.set(1.05);
+  };
+
+  const handleMouseLeave = () => {
+    targetRotateX.set(defaultRotateX);
+    targetRotateY.set(defaultRotateY);
+    scale.set(1);
+  };
+
+  return (
+    <div className="w-full md:w-1/2 perspective-[1200px]">
+      <motion.div
+        ref={ref}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className={cn(
+          "w-full aspect-video bg-[#101010] border border-white/10 rounded-lg shadow-2xl relative overflow-hidden group cursor-pointer"
+        )}
+        style={{ 
+          rotateX, 
+          rotateY, 
+          scale: scaleSpring,
+          transformStyle: "preserve-3d" 
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-50 pointer-events-none" />
+        <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/20 font-mono text-sm pointer-events-none">
+          [ System Preview: {title} ]
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 export function Systems() {
   return (
     <Section>
@@ -70,28 +137,19 @@ export function Systems() {
           {systems.map((system, index) => {
             const isEven = index % 2 === 0;
             return (
-              <div 
+              <motion.div 
                 key={system.slug} 
                 className={cn(
                   "flex flex-col gap-8 md:gap-16 items-center",
                   isEven ? "md:flex-row" : "md:flex-row-reverse"
                 )}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-10%" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
               >
-                {/* Angled Screen Placeholder */}
-                <div className="w-full md:w-1/2 perspective-[1000px]">
-                  <div 
-                    className={cn(
-                      "w-full aspect-video bg-[#101010] border border-white/10 rounded-lg shadow-2xl relative overflow-hidden group transition-transform duration-700 hover:scale-[1.02]",
-                      isEven ? "rotate-y-3 -rotate-x-2" : "-rotate-y-3 -rotate-x-2"
-                    )}
-                    style={{ transformStyle: "preserve-3d" }}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-50" />
-                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/20 font-mono text-sm">
-                      [ System Preview: {system.title} ]
-                    </div>
-                  </div>
-                </div>
+                {/* Interactive Angled Screen */}
+                <SystemCard title={system.title} isEven={isEven} />
 
                 {/* Content */}
                 <div className="w-full md:w-1/2 space-y-6">
@@ -124,7 +182,7 @@ export function Systems() {
                      </Link>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
