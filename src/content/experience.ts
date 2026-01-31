@@ -6,6 +6,13 @@ export interface ExperienceRole {
   endDate?: Date; // undefined means "Present"
   impact: string[];
   skills?: string[];
+  /** Filename of the logo (e.g., "company-logo.png"). Logos are stored in /public/logos/ */
+  logo?: string;
+}
+
+/** Helper to get the full logo path */
+export function getLogoPath(filename: string): string {
+  return `/logos/${filename}`;
 }
 
 /** Calculate tenure string from start date to end date (or present), rounding up */
@@ -45,6 +52,7 @@ export const experiences: ExperienceRole[] = [
   {
     title: "Co-Founder & Chief Technology Officer (CTO)",
     org: "Longhorn Sim Racing",
+    logo: "white_logo_black_square.png",
     location: "Austin, Texas, United States",
     startDate: new Date(2025, 2, 1), // March 2025
     impact: [
@@ -75,6 +83,7 @@ export const experiences: ExperienceRole[] = [
   {
     title: "Telemetry Software Engineer | Electronics System (Formula SAE EV Team)",
     org: "Longhorn Racing",
+    logo: "lhr.png",
     location: "Austin, Texas, United States",
     startDate: new Date(2024, 8, 1), // September 2024
     impact: [

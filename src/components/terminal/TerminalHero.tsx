@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, useTransform, MotionValue, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { User, Download } from "lucide-react";
+import { Download } from "lucide-react";
+import { about, getImagePath } from "@/content/about";
 
 interface TerminalHeroProps {
   scrollY: MotionValue<number>;
@@ -94,9 +96,22 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
         setLines(prev => [
           ...prev,
           <div key="output" className="mt-12 mb-12 flex items-center justify-center gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-             <div className="shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg bg-muted border-2 border-accent/20 flex items-center justify-center overflow-hidden relative shadow-lg">
-               <User className="w-10 h-10 text-muted-foreground/50" />
-               <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 to-transparent" />
+             <div className="shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg bg-muted border-2 border-accent/40 p-1 shadow-lg">
+               <div className="relative w-full h-full rounded overflow-hidden">
+                 {about.headshot ? (
+                   <Image
+                     src={getImagePath(about.headshot)}
+                     alt="Gray Marshall"
+                     fill
+                     sizes="96px"
+                     quality={90}
+                     className="object-cover"
+                   />
+                 ) : (
+                   <div className="w-full h-full flex items-center justify-center text-muted-foreground/50" />
+                 )}
+                 <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 to-transparent" />
+               </div>
              </div>
              <div className="text-left">
                <div className="text-xl md:text-3xl font-bold text-foreground tracking-tight">Hey, I&apos;m Gray Marshall.</div>
@@ -249,8 +264,21 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
               className="flex items-center gap-3 relative z-10 w-[200px] cursor-pointer group"
               onClick={() => pathname === "/" ? window.scrollTo({ top: 0, behavior: 'smooth' }) : router.push("/")}
             >
-                <div className="w-8 h-8 rounded bg-muted border border-border flex items-center justify-center text-accent shrink-0 transition-transform group-hover:scale-105">
-                  <span className="font-bold text-xs">GM</span>
+                <div className="w-8 h-8 rounded-md bg-muted border-2 border-accent/40 p-0.5 shrink-0 transition-colors group-hover:border-accent">
+                  <div className="relative w-full h-full rounded overflow-hidden">
+                    {about.headshot ? (
+                      <Image
+                        src={getImagePath(about.headshot)}
+                        alt="Gray Marshall"
+                        fill
+                        sizes="32px"
+                        quality={90}
+                        className="object-cover"
+                      />
+                    ) : (
+                      <span className="font-bold text-xs flex items-center justify-center w-full h-full">GM</span>
+                    )}
+                  </div>
                 </div>
                 <div className="hidden sm:block overflow-hidden h-8 flex flex-col justify-center">
                   <div className="font-bold text-sm leading-none transition-colors group-hover:text-accent">Gray Marshall</div>

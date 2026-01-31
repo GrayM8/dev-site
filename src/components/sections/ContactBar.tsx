@@ -20,7 +20,7 @@ export function ContactBar() {
         <div className="border-t border-b border-white/5 py-12 md:py-16 flex flex-col md:flex-row items-center justify-between gap-8">
            <div className="text-center md:text-left">
              <h2 className="text-2xl font-bold text-foreground mb-2">Let's build something scalable.</h2>
-             <p className="text-muted-foreground">Always open to discussing systems, simulations, and telemetry.</p>
+             <p className="text-muted-foreground">Always open to discussing projects, roles, and Summer 2026 SWE internships.<br />Let&apos;s Connect!</p>
            </div>
            
            <div className="flex items-center gap-6">

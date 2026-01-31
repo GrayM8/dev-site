@@ -7,6 +7,13 @@ export interface EducationInfo {
   expectedGraduation?: Date;
   coursework?: string[];
   skills?: string[];
+  /** Filename of the logo (e.g., "university-logo.png"). Logos are stored in /public/logos/ */
+  logo?: string;
+}
+
+/** Helper to get the full logo path */
+export function getLogoPath(filename: string): string {
+  return `/logos/${filename}`;
 }
 
 /** Calculate period string from dates */
@@ -48,5 +55,6 @@ export const education: EducationInfo = {
     "Git",
     "Software Development",
     "C (Programming Language)"
-  ]
+  ],
+  logo: "texas.png"
 };

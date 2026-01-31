@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { motion } from "framer-motion";
-import { education, getEducationPeriodString } from "@/content/education";
+import { education, getEducationPeriodString, getLogoPath } from "@/content/education";
 
 function SkillsBanner({ skills }: { skills: string[] }) {
   const firstSetRef = useRef<HTMLDivElement>(null);
@@ -82,8 +83,17 @@ export function Education() {
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
             <div className="flex gap-4">
-              <div className="w-12 h-12 shrink-0 rounded bg-muted/50 border border-white/5 flex items-center justify-center text-[10px] text-muted-foreground/40 font-mono">
-                LOGO
+              <div className="w-12 h-12 shrink-0 rounded bg-muted/50 border border-white/5 flex items-center justify-center overflow-hidden relative">
+                {education.logo ? (
+                  <Image
+                    src={getLogoPath(education.logo)}
+                    alt={`${education.school} logo`}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <span className="text-[10px] text-muted-foreground/40 font-mono">LOGO</span>
+                )}
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-foreground">{education.degree}</h3>
