@@ -123,7 +123,7 @@ export function Systems() {
                   </div>
 
                   <ul className="space-y-3 text-muted-foreground">
-                    {system.description.map((item, i) => (
+                    {system.homeBullets?.map((item, i) => (
                       <li key={i} className="flex items-start">
                         <span className="mr-2 mt-1.5 w-1.5 h-1.5 rounded-full bg-white/20 shrink-0" />
                         {item}

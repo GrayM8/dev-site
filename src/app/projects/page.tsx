@@ -3,7 +3,14 @@
 import React from "react";
 import Image from "next/image";
 import { Container } from "@/components/layout/Container";
-import { projects, Project, getProjectImagePath } from "@/content/projects";
+import {
+  Project,
+  getProjectImagePath,
+  getFeaturedProjects,
+  getMainProjects,
+  getAcademicProjects,
+  getAcademicMinorProjects,
+} from "@/content/projects";
 import { Footer } from "@/components/sections/Footer";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -29,9 +36,11 @@ function StatusBadge({ status }: { status: Project["status"] }) {
 function ProjectCard({
   project,
   index,
+  showFeaturedBadge = false,
 }: {
   project: Project;
   index: number;
+  showFeaturedBadge?: boolean;
 }) {
   return (
     <motion.div
@@ -71,7 +80,7 @@ function ProjectCard({
                 />
               </div>
             </div>
-            {/* Radial vignette - visible from 50% to 90% of tile width, curved edges only on left and right */}
+            {/* Radial vignette */}
             <div
               className="absolute inset-0"
               style={{
@@ -88,7 +97,7 @@ function ProjectCard({
                 {project.title}
               </h2>
               <StatusBadge status={project.status} />
-              {project.featured && (
+              {showFeaturedBadge && project.featured && (
                 <span className="px-2 py-0.5 text-xs font-mono uppercase tracking-wider rounded-full border bg-accent/10 text-accent border-accent/20">
                   Featured
                 </span>
@@ -119,8 +128,52 @@ function ProjectCard({
   );
 }
 
+function AcademicMinorCard({
+  project,
+  index,
+}: {
+  project: Project;
+  index: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: index * 0.08 }}
+      className="p-5 rounded-lg bg-card/30 border border-border/50"
+    >
+      <h3 className="text-base font-medium text-foreground/80 mb-1">
+        {project.title}
+      </h3>
+      <p className="text-sm text-muted-foreground mb-3">
+        {project.tagline}
+      </p>
+      {project.overview && (
+        <p className="text-sm text-muted-foreground/80 mb-3">
+          {project.overview}
+        </p>
+      )}
+      <div className="flex flex-wrap gap-1.5">
+        {project.tech.map((t) => (
+          <span
+            key={t}
+            className="text-xs font-mono text-muted-foreground/60 bg-muted/30 px-1.5 py-0.5 rounded"
+          >
+            {t}
+          </span>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
 export default function ProjectsPage() {
   const { scrollY } = useScroll();
+
+  const featuredProjects = getFeaturedProjects();
+  const mainProjects = getMainProjects().filter(p => !p.featured);
+  const academicProjects = getAcademicProjects();
+  const academicMinorProjects = getAcademicMinorProjects();
 
   return (
     <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -160,17 +213,83 @@ export default function ProjectsPage() {
               Projects
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl">
-              A collection of open source tools, experiments, and production
-              applications I&apos;ve built.
+              A collection of platforms, systems, and tools I&apos;ve built.
             </p>
           </motion.header>
 
-          {/* Projects List */}
-          <div className="space-y-4">
-            {projects.map((project, index) => (
-              <ProjectCard key={project.slug} project={project} index={index} />
-            ))}
-          </div>
+          {/* Featured Projects Section */}
+          <section className="mb-16">
+            <motion.h2
+              className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.15 }}
+            >
+              Featured Projects
+            </motion.h2>
+            <div className="space-y-4">
+              {featuredProjects.map((project, index) => (
+                <ProjectCard key={project.slug} project={project} index={index} />
+              ))}
+            </div>
+          </section>
+
+          {/* All Projects Section (non-featured main projects) */}
+          {mainProjects.length > 0 && (
+            <section className="mb-16">
+              <motion.h2
+                className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.2 }}
+              >
+                All Projects
+              </motion.h2>
+              <div className="space-y-4">
+                {mainProjects.map((project, index) => (
+                  <ProjectCard key={project.slug} project={project} index={index} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Academic Projects Section */}
+          {academicProjects.length > 0 && (
+            <section className="mb-16">
+              <motion.h2
+                className="text-sm font-mono uppercase tracking-widest text-muted-foreground/70 mb-6"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.25 }}
+              >
+                Academic Projects
+              </motion.h2>
+              <div className="space-y-4">
+                {academicProjects.map((project, index) => (
+                  <ProjectCard key={project.slug} project={project} index={index} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Other Academic Systems Section (no own pages, highly de-emphasized) */}
+          {academicMinorProjects.length > 0 && (
+            <section className="pt-8 border-t border-border/30">
+              <motion.h2
+                className="text-xs font-mono uppercase tracking-widest text-muted-foreground/50 mb-6"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 }}
+              >
+                Other Academic Systems
+              </motion.h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {academicMinorProjects.map((project, index) => (
+                  <AcademicMinorCard key={project.slug} project={project} index={index} />
+                ))}
+              </div>
+            </section>
+          )}
         </Container>
 
         <Footer />
