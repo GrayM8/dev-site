@@ -144,7 +144,7 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
 
     const element = document.getElementById(id);
     if (element) {
-      const offset = window.innerWidth < 768 ? 160 : 80;
+      const offset = window.innerWidth < 768 ? 40 : 80;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
