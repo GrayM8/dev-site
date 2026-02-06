@@ -191,6 +191,7 @@ export function SystemCard({ title, isEven, className, image, secondaryImages, v
               loop
               muted
               playsInline
+              aria-label={`${title} demo`}
               className="absolute inset-0 w-full h-full object-cover pointer-events-none"
             />
           ) : currentImage ? (
@@ -396,6 +397,7 @@ export function Systems() {
                                 loop
                                 muted
                                 playsInline
+                                aria-label={`${item.title} demo`}
                                 className="absolute inset-0 w-full h-full object-cover"
                               />
                             ) : (

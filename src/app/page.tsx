@@ -41,6 +41,7 @@ export default function Home() {
 
   return (
     <main className="min-h-[250vh] bg-background text-foreground overflow-x-hidden selection:bg-accent selection:text-accent-foreground">
+        <h1 className="sr-only">Gray Marshall — Software Engineering Portfolio</h1>
 
         {/* LaserFlow Effect - from top of screen to centered terminal's top edge */}
         {/* Terminal center is at 50vh, terminal is ~280px tall, so top edge is at 50vh - 140px */}

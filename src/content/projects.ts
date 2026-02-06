@@ -2,6 +2,8 @@ export interface Project {
   title: string;
   slug: string;
   tagline: string;
+  /** Unique meta description for SEO (140–160 chars). Falls back to overview, then tagline. */
+  metaDescription?: string;
   /** Bullet points shown on home page featured section */
   homeBullets?: string[];
   /** Overview paragraph shown at top of project detail page */
@@ -42,6 +44,7 @@ export const projects: Project[] = [
     title: "Longhorn Sim Racing Platform",
     slug: "longhorn-sim-racing",
     tagline: "Events, Membership & Competition Management Platform",
+    metaDescription: "A production web platform for managing events, members, and competition results for a university sim racing organization.",
     homeBullets: [
       "Centralized membership, events, and competition results into a single self-serve platform.",
       "Automated race result ingestion and leaderboard/statistics processing.",
@@ -67,6 +70,7 @@ export const projects: Project[] = [
     title: "Formula SAE EV Telemetry System",
     slug: "fsae-telemetry",
     tagline: "Distributed Real-Time Vehicle Telemetry & Analytics Platform",
+    metaDescription: "A distributed telemetry platform streaming live vehicle data from a Formula SAE electric racecar for real-time analysis and trackside decision-making.",
     homeBullets: [
       "Powers live telemetry, timing, and analytics for engineers and drivers during testing and competition.",
       "Streams high-frequency vehicle data end-to-end with low latency and fault tolerance.",
@@ -99,6 +103,7 @@ export const projects: Project[] = [
     title: "In-Vehicle Driver Dash System",
     slug: "driver-dash",
     tagline: "Real-Time Driver Display for Vehicle State, Timing, and Energy Data",
+    metaDescription: "An in-car driver display presenting live timing, energy deltas, and vehicle state during Formula SAE testing and competition runs.",
     homeBullets: [
       "Displays live timing, energy deltas, and vehicle state directly to the driver in real time.",
       "Designed for clarity and reliability under high-speed, safety-critical conditions.",
@@ -128,6 +133,7 @@ export const projects: Project[] = [
     title: "Personal Website (v2)",
     slug: "personal-website",
     tagline: "Technical Portfolio & Personal Platform",
+    metaDescription: "A second-generation portfolio site built for performance and clarity, presenting projects, experience, and technical work by Gray Marshall.",
     homeBullets: [
       "Designed and built a performant, mobile-first personal platform for projects and experience.",
       "Implemented structured metadata, SEO, and sharing previews for reliable discoverability.",
@@ -155,6 +161,7 @@ export const projects: Project[] = [
     title: "Operating Systems Kernel (Pintos)",
     slug: "pintos-kernel",
     tagline: "Educational Operating System with Scheduling, Virtual Memory, and File Systems",
+    metaDescription: "An educational OS kernel implementing process scheduling, virtual memory with paging, and a persistent file system in C.",
     homeBullets: [
       "Implemented core OS kernel subsystems including scheduling, synchronization, and virtual memory.",
       "Built kernel-level file system support with persistence and concurrency considerations.",
@@ -176,6 +183,7 @@ export const projects: Project[] = [
     title: "chArm-v3 CPU Pipeline & Cache Simulator",
     slug: "cpu-simulator",
     tagline: "Cycle-Accurate Simulation of a Pipelined 64-bit ISA with Caching",
+    metaDescription: "A cycle-accurate pipelined CPU simulator with hazard resolution and a two-level cache hierarchy, modeling execution of a 64-bit ISA.",
     homeBullets: [
       "Implemented a pipelined CPU simulator with full hazard detection and resolution.",
       "Modeled cache behavior and memory latency to analyze performance tradeoffs.",

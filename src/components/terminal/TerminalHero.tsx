@@ -138,7 +138,7 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
   const scrollToSection = (id: string) => {
     // If not on home page, navigate to home with hash
     if (pathname !== "/") {
-      router.push(`/#${id}`);
+      window.location.href = `/#${id}`;
       return;
     }
 
@@ -268,7 +268,7 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
             {/* Left: Identity */}
             <div
               className="flex items-center gap-3 relative z-10 w-auto sm:w-[200px] cursor-pointer group"
-              onClick={() => pathname === "/" ? window.scrollTo({ top: 0, behavior: 'smooth' }) : router.push("/")}
+              onClick={() => pathname === "/" ? window.scrollTo({ top: 0, behavior: 'smooth' }) : (window.location.href = "/")}
             >
                 <div className="w-8 h-8 rounded-md bg-muted border-2 border-accent/40 p-0.5 shrink-0 transition-colors group-hover:border-accent">
                   <div className="relative w-full h-full rounded overflow-hidden">

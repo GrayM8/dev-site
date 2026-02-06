@@ -78,12 +78,13 @@ function ProjectCard({
                     loop
                     muted
                     playsInline
+                    aria-label={`${project.title} demo`}
                     className="absolute inset-0 w-full h-full object-cover object-center rounded-lg"
                   />
                 ) : (
                   <Image
                     src={getProjectImagePath(project.image!)}
-                    alt=""
+                    alt={`${project.title} preview`}
                     fill
                     className="object-cover object-center rounded-lg"
                   />
@@ -134,12 +135,13 @@ function ProjectCard({
                     loop
                     muted
                     playsInline
+                    aria-label={`${project.title} demo`}
                     className="absolute inset-0 w-full h-full object-cover object-center rounded-lg"
                   />
                 ) : (
                   <Image
                     src={getProjectImagePath(project.image!)}
-                    alt=""
+                    alt={`${project.title} preview`}
                     fill
                     className="object-cover object-center rounded-lg"
                   />
@@ -253,13 +255,13 @@ export default function ProjectsPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <Link
+            <a
               href="/"
               className="inline-flex items-center text-sm text-muted-foreground hover:text-accent transition-colors mb-12 group"
             >
               <ArrowLeft className="mr-2 w-4 h-4 transition-transform group-hover:-translate-x-1" />
               Back to Home
-            </Link>
+            </a>
           </motion.div>
 
           {/* Header */}

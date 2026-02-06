@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { socialLinks } from "@/content/social";
 import { motion } from "framer-motion";
@@ -138,6 +139,11 @@ export function Footer() {
             <div>
               <span className="font-semibold text-foreground">Gray Marshall</span> — Full Stack Developer
             </div>
+
+            <nav className="flex gap-6">
+              <a href="/" className="hover:text-foreground transition-colors">Home</a>
+              <Link href="/projects" className="hover:text-foreground transition-colors">Projects</Link>
+            </nav>
 
             <div className="flex gap-6">
               <span>© {new Date().getFullYear()}</span>
