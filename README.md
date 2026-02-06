@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gray Marshall - Personal Portfolio
 
-## Getting Started
+A modern, interactive personal portfolio website built with **Next.js 16**, **React 19**, and **Tailwind CSS 4**. The site features a unique "Terminal as Entry Point" UX where a coding terminal boots up the portfolio, morphing into a clean, product-style interface.
 
-First, run the development server:
+## 🚀 Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Framework:** [Next.js 16](https://nextjs.org/) (App Router)
+- **Library:** [React 19](https://react.dev/) (with React Compiler enabled)
+- **Styling:** [Tailwind CSS 4](https://tailwindcss.com/) (using CSS variables & OKLch colors)
+- **Typography:** [Geist](https://vercel.com/font) (Sans & Mono)
+- **Animations:**
+  - [Framer Motion](https://www.framer.com/motion/) (Scroll transforms & layout animations)
+  - [Lenis](https://github.com/darkroomengineering/lenis) (Smooth scrolling)
+  - [OGL](https://github.com/oframe/ogl) (3D LaserFlow background effect)
+  - [Three.js](https://threejs.org/) (Galaxy starfield background)
+- **Deployment:** [Vercel](https://vercel.com) (Analytics & Speed Insights)
+
+## ✨ Key Features
+
+- **Terminal Hero:** A complex, scroll-driven component that simulates a terminal environment. It types `npm run dev` to "boot" the site, then seamlessly transforms into a fixed navigation header as the user scrolls.
+- **Scroll-Driven Storytelling:** Content reveals and background effects (like the LaserFlow and Galaxy) react dynamically to scroll position.
+- **Performance Optimized:** Uses Next.js App Router, React Compiler, and optimized assets for a fast, fluid experience.
+- **Typed Content:** All site content (projects, experience, education) is managed via strongly-typed TypeScript files in `src/content/`.
+- **Design System:** A strict "Dark + Neutral" aesthetic with a single bright orange accent, focusing on clarity, hierarchy, and subtle motion.
+
+## 🛠️ Getting Started
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/yourusername/dev-site.git
+    cd dev-site
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
+
+4.  **Open locally:**
+    Visit [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 📂 Project Structure
+
+```text
+src/
+├── app/                 # Next.js App Router pages & layouts
+│   ├── projects/        # Dynamic project pages ([slug])
+│   └── page.tsx         # Main scroll-driven home page
+├── components/
+│   ├── background/      # Three.js/OGL background effects
+│   ├── layout/          # Layout wrappers (Container, Section)
+│   ├── sections/        # Main page sections (About, Experience, etc.)
+│   ├── terminal/        # Terminal hero & typing logic
+│   └── ui/              # Shared UI components
+├── content/             # Static content data (TS files)
+└── lib/                 # Utilities (cn, formatting helpers)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎨 Design Philosophy
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+> **"Terminal as entry point → dissolves into clean product UI."**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The design follows a strict set of rules defined in `DESIGN.md`:
+- **Visual Identity:** Dark & neutral baseline. No "hacker" cliches (scanlines, green text).
+- **Motion:** Purposeful and subtle. No bounce or excessive parallax. Transitions feel like "panels coming online."
+- **Typography:** **Geist Mono** for code/data/terminal, **Geist Sans** for human-readable text.
 
-## Learn More
+## 📄 License
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is a personal portfolio. All rights reserved.
