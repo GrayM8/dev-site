@@ -138,7 +138,9 @@ export function ProjectClient({ project }: { project: Project }) {
                 title={project.title}
                 isEven={false}
                 image={project.image}
-                className="w-full lg:w-[420px] aspect-video shrink-0"
+                secondaryImages={project.secondaryImages}
+                video={project.video}
+                className={`w-full lg:w-[420px] shrink-0 ${project.video ? "aspect-[5/3]" : "aspect-video"}`}
               />
             </div>
           </motion.header>

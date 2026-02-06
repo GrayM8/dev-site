@@ -6,7 +6,6 @@ import { Container } from "@/components/layout/Container";
 import {
   Project,
   getProjectImagePath,
-  getFeaturedProjects,
   getMainProjects,
   getAcademicProjects,
   getAcademicMinorProjects,
@@ -36,11 +35,9 @@ function StatusBadge({ status }: { status: Project["status"] }) {
 function ProjectCard({
   project,
   index,
-  showFeaturedBadge = false,
 }: {
   project: Project;
   index: number;
-  showFeaturedBadge?: boolean;
 }) {
   return (
     <motion.div
@@ -52,8 +49,8 @@ function ProjectCard({
         href={`/projects/${project.slug}`}
         className="group block p-6 md:p-8 rounded-lg bg-card/50 border border-border hover:border-accent/50 transition-all duration-300 relative overflow-hidden"
       >
-        {/* Background Image with Radial Vignette */}
-        {project.image && (
+        {/* Background Image/Video with Radial Vignette */}
+        {(project.image || project.video) && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <div
               className="absolute inset-0"
@@ -63,7 +60,7 @@ function ProjectCard({
               }}
             >
               <div
-                className="absolute aspect-video"
+                className={project.video ? "absolute aspect-[5/3]" : "absolute aspect-video"}
                 style={{
                   width: "300px",
                   left: "55%",
@@ -72,12 +69,23 @@ function ProjectCard({
                   transformOrigin: "center center"
                 }}
               >
-                <Image
-                  src={getProjectImagePath(project.image)}
-                  alt=""
-                  fill
-                  className="object-cover object-center rounded-lg"
-                />
+                {project.video ? (
+                  <video
+                    src={getProjectImagePath(project.video)}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover object-center rounded-lg"
+                  />
+                ) : (
+                  <Image
+                    src={getProjectImagePath(project.image!)}
+                    alt=""
+                    fill
+                    className="object-cover object-center rounded-lg"
+                  />
+                )}
               </div>
             </div>
             {/* Radial vignette */}
@@ -97,11 +105,6 @@ function ProjectCard({
                 {project.title}
               </h2>
               <StatusBadge status={project.status} />
-              {showFeaturedBadge && project.featured && (
-                <span className="px-2 py-0.5 text-xs font-mono uppercase tracking-wider rounded-full border bg-accent/10 text-accent border-accent/20">
-                  Featured
-                </span>
-              )}
             </div>
             <p className="text-lg text-muted-foreground mb-4 max-w-2xl">
               {project.tagline}
@@ -170,8 +173,7 @@ function AcademicMinorCard({
 export default function ProjectsPage() {
   const { scrollY } = useScroll();
 
-  const featuredProjects = getFeaturedProjects();
-  const mainProjects = getMainProjects().filter(p => !p.featured);
+  const mainProjects = getMainProjects();
   const academicProjects = getAcademicProjects();
   const academicMinorProjects = getAcademicMinorProjects();
 
@@ -217,7 +219,7 @@ export default function ProjectsPage() {
             </p>
           </motion.header>
 
-          {/* Featured Projects Section */}
+          {/* Projects Section */}
           <section className="mb-16">
             <motion.h2
               className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6"
@@ -225,33 +227,14 @@ export default function ProjectsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.15 }}
             >
-              Featured Projects
+              Projects
             </motion.h2>
             <div className="space-y-4">
-              {featuredProjects.map((project, index) => (
+              {mainProjects.map((project, index) => (
                 <ProjectCard key={project.slug} project={project} index={index} />
               ))}
             </div>
           </section>
-
-          {/* All Projects Section (non-featured main projects) */}
-          {mainProjects.length > 0 && (
-            <section className="mb-16">
-              <motion.h2
-                className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.2 }}
-              >
-                All Projects
-              </motion.h2>
-              <div className="space-y-4">
-                {mainProjects.map((project, index) => (
-                  <ProjectCard key={project.slug} project={project} index={index} />
-                ))}
-              </div>
-            </section>
-          )}
 
           {/* Academic Projects Section */}
           {academicProjects.length > 0 && (

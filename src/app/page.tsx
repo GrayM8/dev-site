@@ -8,7 +8,6 @@ import { Systems } from "@/components/sections/Systems";
 import { Experience } from "@/components/sections/Experience";
 import { Education } from "@/components/sections/Education";
 import { ContactBar } from "@/components/sections/ContactBar";
-import { Technologies } from "@/components/sections/Technologies";
 import { Footer } from "@/components/sections/Footer";
 import Galaxy from "@/components/background/Galaxy";
 import LaserFlow from "@/components/terminal/LaserFlow";
@@ -77,14 +76,13 @@ export default function Home() {
       {/* Starts after the "boot" scroll distance. Opacity ensures it doesn't peek early. */}
       <motion.div 
         className="relative z-10 w-full" 
-        style={{ marginTop: "85vh", opacity: contentOpacity }}
+        style={{ marginTop: "95vh", opacity: contentOpacity }}
       >
         <About />
         <Systems />
         <Experience />
         <Education />
         <ContactBar />
-        <Technologies />
         <Footer />
       </motion.div>
     </main>

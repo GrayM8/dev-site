@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
 import { projects, getProjectImagePath } from "@/content/projects";
 import CardSwap, { Card } from "@/components/ui/CardSwap";
 
@@ -16,10 +16,42 @@ interface SystemCardProps {
   isEven: boolean;
   className?: string;
   image?: string;
+  secondaryImages?: string[];
+  video?: string;
 }
 
-export function SystemCard({ title, isEven, className, image }: SystemCardProps) {
+export function SystemCard({ title, isEven, className, image, secondaryImages, video }: SystemCardProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // All images: main first, then secondaries
+  const allImages = image ? [image, ...(secondaryImages || [])] : [];
+  const imageCount = allImages.length;
+  const hasMultipleImages = imageCount > 1;
+
+  // Image rotation effect
+  useEffect(() => {
+    if (!hasMultipleImages) return;
+
+    const mainDuration = 6000; // Main image shows for 6 seconds
+    const secondaryDuration = 1500; // Secondary images show for 1.5 seconds each
+
+    let timeoutId: NodeJS.Timeout;
+    let currentIndex = 0;
+
+    const scheduleNext = () => {
+      const delay = currentIndex === 0 ? mainDuration : secondaryDuration;
+      timeoutId = setTimeout(() => {
+        currentIndex = (currentIndex + 1) % imageCount;
+        setCurrentImageIndex(currentIndex);
+        scheduleNext();
+      }, delay);
+    };
+
+    scheduleNext();
+
+    return () => clearTimeout(timeoutId);
+  }, [hasMultipleImages, imageCount]);
 
   // Default resting angles
   const defaultRotateY = isEven ? 12 : -12;
@@ -55,6 +87,8 @@ export function SystemCard({ title, isEven, className, image }: SystemCardProps)
     scale.set(1);
   };
 
+  const currentImage = allImages[currentImageIndex] || image;
+
   return (
     <div className={cn("w-full md:w-1/2 perspective-[1200px]", className)}>
       <motion.div
@@ -69,13 +103,33 @@ export function SystemCard({ title, isEven, className, image }: SystemCardProps)
           transformStyle: "preserve-3d"
         }}
       >
-        {image ? (
-          <Image
-            src={getProjectImagePath(image)}
-            alt={title}
-            fill
-            className="object-cover pointer-events-none"
+        {video ? (
+          <video
+            src={getProjectImagePath(video)}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
           />
+        ) : currentImage ? (
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentImage}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={getProjectImagePath(currentImage)}
+                alt={title}
+                fill
+                className="object-cover pointer-events-none"
+              />
+            </motion.div>
+          </AnimatePresence>
         ) : (
           <>
             <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-50 pointer-events-none" />
@@ -113,7 +167,14 @@ export function Systems() {
                 transition={{ duration: 0.8, ease: "easeOut" }}
               >
                 {/* Interactive Angled Screen */}
-                <SystemCard title={system.title} isEven={isEven} image={system.image} className="aspect-video" />
+                <SystemCard
+                  title={system.title}
+                  isEven={isEven}
+                  image={system.image}
+                  secondaryImages={system.secondaryImages}
+                  video={system.video}
+                  className={system.video ? "aspect-[5/3]" : "aspect-video"}
+                />
 
                 {/* Content */}
                 <div className="w-full md:w-1/2 space-y-6">

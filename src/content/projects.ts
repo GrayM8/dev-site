@@ -19,6 +19,10 @@ export interface Project {
   category: "main" | "academic" | "academic-minor";
   /** Filename of the project image (e.g., "my-project.jpg"). Images are stored in /public/project-images/ */
   image?: string;
+  /** Secondary images to rotate through after the main image */
+  secondaryImages?: string[];
+  /** Video filename for project tile (e.g., "demo.mp4"). Videos are stored in /public/project-images/ */
+  video?: string;
   repo?: string;
   link?: string;
 }
@@ -76,7 +80,8 @@ export const projects: Project[] = [
     status: "In Development",
     featured: true,
     category: "main",
-    image: "telemetry.jpg"
+    image: "home.png",
+    secondaryImages: ["drive-day-1.png", "drive-day-2.png", "grafana-1.png", "live-view-1.png", "texas-tune-1.png", "texas-tune-2.png", "texas-tune-3.png"]
   },
   {
     title: "In-Vehicle Driver Dash System",
@@ -98,7 +103,8 @@ export const projects: Project[] = [
     tech: ["Real-Time Systems", "WebSockets", "HMI", "TypeScript", "Systems Integration"],
     status: "In Development",
     featured: true,
-    category: "main"
+    category: "main",
+    video: "dash5.mp4"
   },
 
   // ==================== ALL PROJECTS (non-featured) ====================
@@ -122,7 +128,8 @@ export const projects: Project[] = [
     tech: ["TypeScript", "Next.js", "Web Performance"],
     status: "Live",
     featured: false,
-    category: "main"
+    category: "main",
+    image: "portfolio.PNG"
   },
 
   // ==================== ACADEMIC PROJECTS ====================
