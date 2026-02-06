@@ -248,39 +248,89 @@ export function Systems() {
               >
                 <div className="absolute top-20 left-10 right-28 bottom-20">
                   <CardSwap
-                width={200}
-                height={125}
-                cardDistance={30}
-                verticalDistance={30}
-                delay={4000}
-                pauseOnHover={true}
-                skewAmount={4}
-                easing="elastic"
-              >
-                {projects
-                  .filter((p) => p.image)
-                  .slice(0, 5)
-                  .map((project) => (
-                    <Card key={project.slug}>
-                      <div className="relative w-full h-full">
-                        <Image
-                          src={getProjectImagePath(project.image!)}
-                          alt={project.title}
-                          fill
-                          className="object-cover"
-                        />
-                        <div className="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                          <h4 className="text-xs font-medium text-white truncate">
-                            {project.title}
-                          </h4>
-                          <p className="text-[10px] text-white/60 truncate">
-                            {project.tagline}
-                          </p>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-              </CardSwap>
+                    width={200}
+                    height={125}
+                    cardDistance={30}
+                    verticalDistance={30}
+                    delay={4000}
+                    pauseOnHover={true}
+                    skewAmount={4}
+                    easing="elastic"
+                  >
+                    {(() => {
+                      // Collect media items - prioritize one from each project first
+                      const mediaItems: { src: string; type: 'image' | 'video'; title: string; tagline: string }[] = [];
+
+                      // First pass: one primary media per project (video or main image)
+                      for (const project of projects) {
+                        if (project.video) {
+                          mediaItems.push({
+                            src: project.video,
+                            type: 'video',
+                            title: project.title,
+                            tagline: project.tagline
+                          });
+                        } else if (project.image) {
+                          mediaItems.push({
+                            src: project.image,
+                            type: 'image',
+                            title: project.title,
+                            tagline: project.tagline
+                          });
+                        }
+                      }
+
+                      // Second pass: fill remaining slots with secondary images
+                      if (mediaItems.length < 6) {
+                        for (const project of projects) {
+                          if (project.secondaryImages) {
+                            for (const img of project.secondaryImages) {
+                              if (mediaItems.length >= 6) break;
+                              mediaItems.push({
+                                src: img,
+                                type: 'image',
+                                title: project.title,
+                                tagline: project.tagline
+                              });
+                            }
+                          }
+                          if (mediaItems.length >= 6) break;
+                        }
+                      }
+
+                      return mediaItems.slice(0, 6).map((item, idx) => (
+                        <Card key={`${item.src}-${idx}`}>
+                          <div className="relative w-full h-full">
+                            {item.type === 'video' ? (
+                              <video
+                                src={getProjectImagePath(item.src)}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                className="absolute inset-0 w-full h-full object-cover"
+                              />
+                            ) : (
+                              <Image
+                                src={getProjectImagePath(item.src)}
+                                alt={item.title}
+                                fill
+                                className="object-cover"
+                              />
+                            )}
+                            <div className="absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                              <h4 className="text-xs font-medium text-white truncate">
+                                {item.title}
+                              </h4>
+                              <p className="text-[10px] text-white/60 truncate">
+                                {item.tagline}
+                              </p>
+                            </div>
+                          </div>
+                        </Card>
+                      ));
+                    })()}
+                  </CardSwap>
                 </div>
               </div>
             </div>
