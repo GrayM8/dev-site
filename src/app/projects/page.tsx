@@ -39,6 +39,8 @@ function ProjectCard({
   project: Project;
   index: number;
 }) {
+  const hasMedia = project.image || project.video;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -47,11 +49,67 @@ function ProjectCard({
     >
       <Link
         href={`/projects/${project.slug}`}
-        className="group block p-6 md:p-8 rounded-lg bg-card/50 border border-border hover:border-accent/50 transition-all duration-300 relative overflow-hidden"
+        className="group block rounded-lg bg-card/50 border border-border hover:border-accent/50 transition-all duration-300 relative overflow-hidden"
       >
-        {/* Background Image/Video with Radial Vignette */}
-        {(project.image || project.video) && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Mobile: Image/Video at top in 16:9 with angled plane effect */}
+        {hasMedia && (
+          <div className="md:hidden relative aspect-video overflow-hidden rounded-t-lg bg-[#0a0a0a]">
+            <div
+              className="absolute inset-0"
+              style={{
+                perspective: "600px",
+                perspectiveOrigin: "50% 50%"
+              }}
+            >
+              <div
+                className={project.video ? "absolute aspect-[5/3]" : "absolute aspect-video"}
+                style={{
+                  width: "300px",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translateX(-50%) translateY(-50%) rotateX(50deg) rotateZ(20deg) scale(2.2)",
+                  transformOrigin: "center center"
+                }}
+              >
+                {project.video ? (
+                  <video
+                    src={getProjectImagePath(project.video)}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover object-center rounded-lg"
+                  />
+                ) : (
+                  <Image
+                    src={getProjectImagePath(project.image!)}
+                    alt=""
+                    fill
+                    className="object-cover object-center rounded-lg"
+                  />
+                )}
+              </div>
+            </div>
+            {/* Bottom gradient fade */}
+            <div
+              className="absolute inset-x-0 bottom-0 h-16 pointer-events-none"
+              style={{
+                background: "linear-gradient(to top, rgba(10, 10, 10, 0.9), transparent)"
+              }}
+            />
+            {/* Top right corner fade */}
+            <div
+              className="absolute top-0 right-0 w-24 h-24 pointer-events-none"
+              style={{
+                background: "radial-gradient(ellipse at 100% 0%, rgba(10, 10, 10, 0.7) 0%, transparent 70%)"
+              }}
+            />
+          </div>
+        )}
+
+        {/* Desktop: Background Image/Video with Radial Vignette */}
+        {hasMedia && (
+          <div className="hidden md:block absolute inset-0 pointer-events-none overflow-hidden">
             <div
               className="absolute inset-0"
               style={{
@@ -98,7 +156,7 @@ function ProjectCard({
           </div>
         )}
 
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 relative z-10">
+        <div className="p-6 md:p-8 flex flex-col md:flex-row md:items-start md:justify-between gap-4 relative z-10">
           <div className="flex-1">
             <div className="flex flex-wrap items-center gap-3 mb-2">
               <h2 className="text-xl md:text-2xl font-medium text-foreground group-hover:text-accent transition-colors">
