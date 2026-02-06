@@ -310,24 +310,8 @@ export function Systems() {
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
-            {/* Text and Link - Left */}
-            <div className="flex flex-col gap-4">
-              <h3 className="text-2xl font-bold text-foreground">
-                More Projects
-              </h3>
-              <p className="text-muted-foreground max-w-md">
-                Explore the full collection of tools, experiments, and applications.
-              </p>
-              <Link
-                href="/projects"
-                className="inline-flex items-center text-lg text-foreground hover:text-accent transition-colors group mt-2"
-              >
-                View all projects <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
-
-            {/* Card Swap Display - Right */}
-            <div className="relative h-[180px] w-full md:w-[320px] shrink-0 hidden md:block">
+            {/* Card Swap Display - Above text on mobile, right on desktop */}
+            <div className="relative h-[180px] w-full md:w-[320px] shrink-0 md:order-2">
               <div
                 className="absolute -inset-20"
                 style={{
@@ -423,6 +407,22 @@ export function Systems() {
                   </CardSwap>
                 </div>
               </div>
+            </div>
+
+            {/* Text and Link */}
+            <div className="flex flex-col gap-4 md:order-1">
+              <h3 className="text-2xl font-bold text-foreground">
+                More Projects
+              </h3>
+              <p className="text-muted-foreground max-w-md">
+                Explore the full collection of tools, experiments, and applications.
+              </p>
+              <Link
+                href="/projects"
+                className="inline-flex items-center text-lg text-foreground hover:text-accent transition-colors group mt-2"
+              >
+                View all projects <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
+              </Link>
             </div>
           </div>
         </motion.div>
