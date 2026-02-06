@@ -26,9 +26,17 @@ export default function Home() {
   // scrollY from the previous route. Dispatching a scroll event after mount
   // forces it to re-read window.scrollY (which Next.js has already reset to 0).
   useEffect(() => {
+    // Initial sync
     requestAnimationFrame(() => {
       window.dispatchEvent(new Event("scroll"));
     });
+    
+    // Backup sync after a short delay to ensure Lenis and Next.js are done
+    const timer = setTimeout(() => {
+      window.dispatchEvent(new Event("scroll"));
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -44,6 +52,7 @@ export default function Home() {
             }}
         >
             <LaserFlow
+                key="laser-flow-home"
                 color="#6366f1"
                 horizontalBeamOffset={0}
                 verticalBeamOffset={-0.30}

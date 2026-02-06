@@ -136,7 +136,7 @@ export function Footer() {
         <Container>
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-muted-foreground">
             <div>
-              <span className="font-semibold text-foreground">Gray Marshall</span> — Full Stack Engineer
+              <span className="font-semibold text-foreground">Gray Marshall</span> — Full Stack Developer
             </div>
 
             <div className="flex gap-6">

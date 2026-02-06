@@ -287,7 +287,6 @@ export function LaserFlow({
   const mountRef = useRef<HTMLDivElement | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const uniformsRef = useRef<Record<string, { value: unknown }> | null>(null);
-  const hasFadedRef = useRef(false);
   const rectRef = useRef<DOMRect | null>(null);
   const baseDprRef = useRef<number>(1);
   const currentDprRef = useRef<number>(1);
@@ -366,7 +365,7 @@ export function LaserFlow({
       uFalloffStart: { value: falloffStart },
       uFogFallSpeed: { value: fogFallSpeed },
       uColor: { value: new THREE.Vector3(1, 1, 1) },
-      uFade: { value: hasFadedRef.current ? 1 : 0 }
+      uFade: { value: 0 }
     };
     uniformsRef.current = uniforms;
 
@@ -386,12 +385,13 @@ export function LaserFlow({
 
     const clock = new THREE.Clock();
     let prevTime = 0;
-    let fade = hasFadedRef.current ? 1 : 0;
+    let internalFade = 0;
 
     const mouseTarget = new THREE.Vector2(0, 0);
     const mouseSmooth = new THREE.Vector2(0, 0);
 
     const setSizeNow = () => {
+      if (!mount) return;
       const w = mount.clientWidth || 1;
       const h = mount.clientHeight || 1;
       const pr = currentDprRef.current;
@@ -514,11 +514,10 @@ export function LaserFlow({
       (uniforms.uFlowTime.value as number) += cdt;
       (uniforms.uFogTime.value as number) += cdt;
 
-      if (!hasFadedRef.current) {
+      if (internalFade < 1) {
         const fadeDur = 1.0;
-        fade = Math.min(1, fade + cdt / fadeDur);
-        uniforms.uFade.value = fade;
-        if (fade >= 1) hasFadedRef.current = true;
+        internalFade = Math.min(1, internalFade + cdt / fadeDur);
+        uniforms.uFade.value = internalFade;
       }
 
       const tau = Math.max(1e-3, mouseSmoothTime);
@@ -545,12 +544,9 @@ export function LaserFlow({
       canvas.removeEventListener('webglcontextrestored', onCtxRestored);
       geometry.dispose();
       material.dispose();
-      // Release the WebGL context before dispose so the browser can reclaim it
-      // immediately (matches Galaxy cleanup pattern)
-      const gl = renderer.getContext();
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      
       renderer.dispose();
-      if (mount.contains(canvas)) mount.removeChild(canvas);
+      if (mount && mount.contains(canvas)) mount.removeChild(canvas);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dpr]);

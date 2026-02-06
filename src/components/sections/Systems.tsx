@@ -175,7 +175,7 @@ export function SystemCard({ title, isEven, className, image, secondaryImages, v
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="w-full h-full bg-[#101010] border border-white/10 rounded-lg shadow-2xl relative overflow-hidden group cursor-pointer touch-none"
+        className="w-full h-full group cursor-pointer touch-none"
         style={{
           rotateX,
           rotateY,
@@ -183,41 +183,43 @@ export function SystemCard({ title, isEven, className, image, secondaryImages, v
           transformStyle: "preserve-3d"
         }}
       >
-        {video ? (
-          <video
-            src={getProjectImagePath(video)}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-          />
-        ) : currentImage ? (
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentImage}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="absolute inset-0"
-            >
-              <Image
-                src={getProjectImagePath(currentImage)}
-                alt={title}
-                fill
-                className="object-cover pointer-events-none"
-              />
-            </motion.div>
-          </AnimatePresence>
-        ) : (
-          <>
-            <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-50 pointer-events-none" />
-            <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/20 font-mono text-sm pointer-events-none">
-              [ Project Preview: {title} ]
-            </div>
-          </>
-        )}
+        <div className="w-full h-full bg-[#101010] border border-white/10 rounded-lg shadow-2xl relative overflow-hidden">
+          {video ? (
+            <video
+              src={getProjectImagePath(video)}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            />
+          ) : currentImage ? (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentImage}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src={getProjectImagePath(currentImage)}
+                  alt={title}
+                  fill
+                  className="object-cover pointer-events-none"
+                />
+              </motion.div>
+            </AnimatePresence>
+          ) : (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-50 pointer-events-none" />
+              <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/20 font-mono text-sm pointer-events-none">
+                [ Project Preview: {title} ]
+              </div>
+            </>
+          )}
+        </div>
       </motion.div>
     </div>
   );
@@ -259,6 +261,12 @@ export function Systems() {
                 {/* Content */}
                 <div className="w-full md:w-1/2 space-y-6">
                   <div>
+                    {index === 0 && (
+                      <span className="inline-flex items-center gap-1.5 text-xs font-mono tracking-wider uppercase text-accent mb-3">
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                        Flagship Project
+                      </span>
+                    )}
                     <h3 className="text-3xl font-bold text-foreground mb-2">{system.title}</h3>
                     <p className="text-lg text-accent font-medium">{system.tagline}</p>
                   </div>
