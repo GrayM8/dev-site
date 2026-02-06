@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, useTransform, MotionValue, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Download } from "lucide-react";
+import { Download, User, FolderKanban, Briefcase, GraduationCap, Mail } from "lucide-react";
 import { about, getImagePath } from "@/content/about";
 
 interface TerminalHeroProps {
@@ -261,7 +261,7 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
           >
             {/* Left: Identity */}
             <div
-              className="flex items-center gap-3 relative z-10 w-[200px] cursor-pointer group"
+              className="flex items-center gap-3 relative z-10 w-auto sm:w-[200px] cursor-pointer group"
               onClick={() => pathname === "/" ? window.scrollTo({ top: 0, behavior: 'smooth' }) : router.push("/")}
             >
                 <div className="w-8 h-8 rounded-md bg-muted border-2 border-accent/40 p-0.5 shrink-0 transition-colors group-hover:border-accent">
@@ -310,7 +310,7 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
             </div>
 
             {/* Center: Animated Sequence */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[200px] sm:max-w-md flex justify-center z-0">
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[220px] sm:max-w-md flex justify-center z-20">
               <AnimatePresence mode="wait">
                 {headerPhase === "boot" ? (
                   <motion.div 
@@ -327,18 +327,28 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
                 ) : (
                   <motion.div
                     key="nav"
-                    className="flex gap-4 sm:gap-6 text-sm font-medium"
+                    className="flex items-center gap-2 sm:gap-6 text-sm font-medium"
                     initial={{ y: 10, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.4 }}
                   >
                     <button
                       onClick={() => scrollToSection("about")}
-                      className="text-muted-foreground hover:text-accent transition-colors"
+                      className="text-muted-foreground hover:text-accent transition-colors p-2 sm:p-0 flex items-center justify-center"
+                      title="About"
                     >
-                      About
+                      <User className="w-5 h-5 sm:hidden" />
+                      <span className="hidden sm:inline">About</span>
                     </button>
-                    <div className="relative group h-[40px] flex items-center overflow-hidden">
+                    {/* Projects - simple button on mobile, dropdown on desktop */}
+                    <button
+                      onClick={() => router.push("/projects")}
+                      className="sm:hidden text-muted-foreground hover:text-accent transition-colors p-2 flex items-center justify-center"
+                      title="Projects"
+                    >
+                      <FolderKanban className="w-5 h-5" />
+                    </button>
+                    <div className="relative group h-[40px] hidden sm:flex items-center overflow-hidden">
                       {/* Default state - "Projects" */}
                       <span className="text-muted-foreground group-hover:text-accent group-hover:-translate-y-full group-hover:opacity-0 transition-all duration-300 cursor-default">
                         Projects
@@ -361,21 +371,27 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
                     </div>
                     <button
                       onClick={() => scrollToSection("experience")}
-                      className="text-muted-foreground hover:text-accent transition-colors"
+                      className="text-muted-foreground hover:text-accent transition-colors p-2 sm:p-0 flex items-center justify-center"
+                      title="Experience"
                     >
-                      Experience
+                      <Briefcase className="w-5 h-5 sm:hidden" />
+                      <span className="hidden sm:inline">Experience</span>
                     </button>
                     <button
                       onClick={() => scrollToSection("education")}
-                      className="text-muted-foreground hover:text-accent transition-colors"
+                      className="text-muted-foreground hover:text-accent transition-colors p-2 sm:p-0 flex items-center justify-center"
+                      title="Education"
                     >
-                      Education
+                      <GraduationCap className="w-5 h-5 sm:hidden" />
+                      <span className="hidden sm:inline">Education</span>
                     </button>
                     <button
                       onClick={() => scrollToSection("contact")}
-                      className="text-muted-foreground hover:text-accent transition-colors"
+                      className="text-muted-foreground hover:text-accent transition-colors p-2 sm:p-0 flex items-center justify-center"
+                      title="Contact"
                     >
-                      Contact
+                      <Mail className="w-5 h-5 sm:hidden" />
+                      <span className="hidden sm:inline">Contact</span>
                     </button>
                   </motion.div>
                 )}
