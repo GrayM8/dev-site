@@ -35,7 +35,7 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
   // Layout Transforms for Smooth Morph
   const marginTop = useTransform(scrollY, [500, 700], [alwaysHeader ? "0vh" : "50vh", "0vh"]);
   const y = useTransform(scrollY, [500, 700], [alwaysHeader ? "0%" : "-50%", "0%"]);
-  const maxWidth = useTransform(scrollY, [500, 700], [alwaysHeader ? "100vw" : "46rem", "100vw"]); 
+  const maxWidth = useTransform(scrollY, [500, 700], [alwaysHeader ? "200rem" : "46rem", "200rem"]);
   const borderRadius = useTransform(scrollY, [500, 700], [alwaysHeader ? 0 : 12, 0]);
   
   // Physical / 3D Transforms
@@ -85,7 +85,7 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
       const cmd = "whoami";
       for (let i = 1; i <= cmd.length; i++) {
         if (!isMounted) return;
-        setLines([<div key="cmd" className="flex items-center"><span className="text-accent mr-2">➜</span><span className="text-blue-400 mr-2">~</span>{cmd.slice(0, i)}</div>]);
+        setLines([<div key="cmd" className="flex items-center"><span className="text-accent mr-1.5 md:mr-2">➜</span><span className="text-blue-400 mr-1.5 md:mr-2">~</span>{cmd.slice(0, i)}</div>]);
         await new Promise(r => setTimeout(r, 50));
       }
       
@@ -95,8 +95,8 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
       if (isMounted) {
         setLines(prev => [
           ...prev,
-          <div key="output" className="mt-12 mb-12 flex items-center justify-center gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-             <div className="shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg bg-muted border-2 border-accent/40 p-1 shadow-lg">
+          <div key="output" className="mt-6 mb-6 md:mt-12 md:mb-12 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+             <div className="shrink-0 w-16 h-16 md:w-24 md:h-24 rounded-lg bg-muted border-2 border-accent/40 p-1 shadow-lg">
                <div className="relative w-full h-full rounded overflow-hidden">
                  {about.headshot ? (
                    <Image
@@ -113,13 +113,13 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
                  <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 to-transparent" />
                </div>
              </div>
-             <div className="text-left">
-               <div className="text-xl md:text-3xl font-bold text-foreground tracking-tight">Hey, I&apos;m Gray Marshall.</div>
-               <div className="text-muted-foreground mt-2 text-sm md:text-base font-medium">Software Engineering • Full-Stack &amp; Systems</div>
-               <div className="text-muted-foreground/80 text-sm md:text-base">Co-Founder &amp; CTO, Longhorn Sim Racing | CS @ UT Austin</div>
+             <div className="text-center md:text-left">
+               <div className="text-lg md:text-3xl font-bold text-foreground tracking-tight">Hey, I&apos;m Gray Marshall.</div>
+               <div className="text-muted-foreground mt-1 md:mt-2 text-xs md:text-base font-medium">Software Engineering • Full-Stack &amp; Systems</div>
+               <div className="text-muted-foreground/80 text-xs md:text-base">Co-Founder &amp; CTO, LSR | CS @ UT Austin</div>
              </div>
           </div>,
-          <div key="spacer" className="h-4" />
+          <div key="spacer" className="h-2 md:h-4" />
         ]);
         setIsWhoamiDone(true);
       }
@@ -158,12 +158,15 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
   };
 
   return (
-    <motion.div 
-      className="relative z-50 w-full"
+    <motion.div
+      className={cn(
+        "relative z-50 mx-auto",
+        !isHeaderMode && "w-[90vw] md:w-auto"
+      )}
       style={{
         marginTop,
         y,
-        maxWidth,
+        maxWidth: isHeaderMode ? "100vw" : maxWidth,
         perspective: "1000px" // Enable 3D space
       }}
     >
@@ -226,30 +229,33 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
           }}
         >
           {/* Window Controls (Fade out) */}
-          <motion.div 
-            className={cn("flex items-center px-5 py-4 bg-muted/10 border-b border-white/5", isHeaderMode && "hidden")}
+          <motion.div
+            className={cn("flex items-center px-3 md:px-5 py-3 md:py-4 bg-muted/10 border-b border-white/5", isHeaderMode && "hidden")}
             style={{ opacity: heroContentOpacity }}
           >
-            <div className="flex space-x-2">
-              <div className="w-3 h-3 rounded-full bg-red-500/20" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500/20" />
-              <div className="w-3 h-3 rounded-full bg-green-500/20" />
+            <div className="flex space-x-1.5 md:space-x-2">
+              <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-red-500/20" />
+              <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-yellow-500/20" />
+              <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-green-500/20" />
             </div>
-            <div className="ml-4 text-xs text-muted-foreground font-mono">bash — user@dev-portfolio</div>
+            <div className="ml-3 md:ml-4 text-[10px] md:text-xs text-muted-foreground font-mono truncate">
+              <span className="hidden sm:inline">bash — user@dev-portfolio</span>
+              <span className="sm:hidden">~</span>
+            </div>
           </motion.div>
 
-          {/* Hero Content (Increased padding) */}
-          <motion.div 
-            className={cn("p-8 font-mono text-sm md:text-base", isHeaderMode ? "hidden" : "block")}
+          {/* Hero Content */}
+          <motion.div
+            className={cn("p-4 md:p-8 font-mono text-xs md:text-base", isHeaderMode ? "hidden" : "block")}
             style={{ opacity: heroContentOpacity }}
           >
             {lines}
             {isWhoamiDone && (
               <div className="flex items-center mt-2">
-                <span className="text-accent mr-2">➜</span>
-                <span className="text-blue-400 mr-2">~</span>
+                <span className="text-accent mr-1.5 md:mr-2">➜</span>
+                <span className="text-blue-400 mr-1.5 md:mr-2">~</span>
                 <span>{typedCommand}</span>
-                <span className="inline-block w-2.5 h-5 bg-accent ml-1 animate-pulse" />
+                <span className="inline-block w-2 h-4 md:w-2.5 md:h-5 bg-accent ml-1 animate-pulse" />
               </div>
             )}
           </motion.div>

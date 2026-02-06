@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useScroll, useTransform, motion } from "framer-motion";
 import { TerminalHero } from "@/components/terminal/TerminalHero";
 import { About } from "@/components/sections/About";
@@ -21,6 +21,15 @@ export default function Home() {
 
   // LaserFlow fades out as terminal morphs to header
     const laserOpacity = useTransform(scrollY, [400, 650], [1, 0]);
+
+  // After client-side navigation, Framer Motion's useScroll may hold a stale
+  // scrollY from the previous route. Dispatching a scroll event after mount
+  // forces it to re-read window.scrollY (which Next.js has already reset to 0).
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      window.dispatchEvent(new Event("scroll"));
+    });
+  }, []);
 
   return (
     <main className="min-h-[250vh] bg-background text-foreground overflow-x-hidden selection:bg-accent selection:text-accent-foreground">
@@ -65,9 +74,9 @@ export default function Home() {
       </div>
 
       {/* Fixed Hero Layer */}
-      <div className="fixed inset-0 z-50 flex flex-col items-center pointer-events-none">
+      <div className="fixed inset-0 z-50 pointer-events-none">
         {/* TerminalHero handles its own alignment via margins/layout animation */}
-        <div className="w-full flex justify-center pointer-events-auto">
+        <div className="w-full pointer-events-auto">
            <TerminalHero scrollY={scrollY} />
         </div>
       </div>

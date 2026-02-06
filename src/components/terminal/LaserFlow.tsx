@@ -296,7 +296,7 @@ export function LaserFlow({
   const lastFpsCheckRef = useRef<number>(performance.now());
   const emaDtRef = useRef<number>(16.7);
   const pausedRef = useRef<boolean>(false);
-  const inViewRef = useRef<boolean>(true);
+
 
   const hexToRGB = (hex: string) => {
     let c = hex.trim();
@@ -424,14 +424,6 @@ export function LaserFlow({
     const ro = new ResizeObserver(scheduleResize);
     ro.observe(mount);
 
-    const io = new IntersectionObserver(
-      entries => {
-        inViewRef.current = entries[0]?.isIntersecting ?? true;
-      },
-      { root: null, threshold: 0 }
-    );
-    io.observe(mount);
-
     const onVis = () => {
       pausedRef.current = document.hidden;
     };
@@ -505,7 +497,7 @@ export function LaserFlow({
 
     const animate = () => {
       raf = requestAnimationFrame(animate);
-      if (pausedRef.current || !inViewRef.current) return;
+      if (pausedRef.current) return;
 
       const t = clock.getElapsedTime();
       const dt = Math.max(0, t - prevTime);
@@ -544,7 +536,6 @@ export function LaserFlow({
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
-      io.disconnect();
       document.removeEventListener('visibilitychange', onVis);
       canvas.removeEventListener('pointermove', onMove);
       canvas.removeEventListener('pointerdown', onMove);
@@ -554,6 +545,10 @@ export function LaserFlow({
       canvas.removeEventListener('webglcontextrestored', onCtxRestored);
       geometry.dispose();
       material.dispose();
+      // Release the WebGL context before dispose so the browser can reclaim it
+      // immediately (matches Galaxy cleanup pattern)
+      const gl = renderer.getContext();
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
       renderer.dispose();
       if (mount.contains(canvas)) mount.removeChild(canvas);
     };
