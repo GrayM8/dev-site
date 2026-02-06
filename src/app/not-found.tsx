@@ -13,12 +13,14 @@ export default function NotFound() {
             The page you&#39;re looking for doesn&#39;t exist or has been moved.
           </p>
           <nav className="flex gap-6 text-sm">
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a
               href="/"
               className="text-foreground hover:text-accent transition-colors"
             >
               Home
             </a>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a
               href="/projects"
               className="text-foreground hover:text-accent transition-colors"

@@ -141,6 +141,7 @@ export function Footer() {
             </div>
 
             <nav className="flex gap-6">
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- intentional full reload for LaserFlow */}
               <a href="/" className="hover:text-foreground transition-colors">Home</a>
               <Link href="/projects" className="hover:text-foreground transition-colors">Projects</Link>
             </nav>

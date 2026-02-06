@@ -255,6 +255,7 @@ export default function ProjectsPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
           >
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- intentional full reload for LaserFlow */}
             <a
               href="/"
               className="inline-flex items-center text-sm text-muted-foreground hover:text-accent transition-colors mb-12 group"
