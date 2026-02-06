@@ -287,7 +287,6 @@ export function LaserFlow({
   const mountRef = useRef<HTMLDivElement | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const uniformsRef = useRef<Record<string, { value: unknown }> | null>(null);
-  const hasFadedRef = useRef(false);
   const rectRef = useRef<DOMRect | null>(null);
   const baseDprRef = useRef<number>(1);
   const currentDprRef = useRef<number>(1);
@@ -296,7 +295,7 @@ export function LaserFlow({
   const lastFpsCheckRef = useRef<number>(performance.now());
   const emaDtRef = useRef<number>(16.7);
   const pausedRef = useRef<boolean>(false);
-  const inViewRef = useRef<boolean>(true);
+
 
   const hexToRGB = (hex: string) => {
     let c = hex.trim();
@@ -366,7 +365,7 @@ export function LaserFlow({
       uFalloffStart: { value: falloffStart },
       uFogFallSpeed: { value: fogFallSpeed },
       uColor: { value: new THREE.Vector3(1, 1, 1) },
-      uFade: { value: hasFadedRef.current ? 1 : 0 }
+      uFade: { value: 0 }
     };
     uniformsRef.current = uniforms;
 
@@ -386,12 +385,13 @@ export function LaserFlow({
 
     const clock = new THREE.Clock();
     let prevTime = 0;
-    let fade = hasFadedRef.current ? 1 : 0;
+    let internalFade = 0;
 
     const mouseTarget = new THREE.Vector2(0, 0);
     const mouseSmooth = new THREE.Vector2(0, 0);
 
     const setSizeNow = () => {
+      if (!mount) return;
       const w = mount.clientWidth || 1;
       const h = mount.clientHeight || 1;
       const pr = currentDprRef.current;
@@ -423,14 +423,6 @@ export function LaserFlow({
     setSizeNow();
     const ro = new ResizeObserver(scheduleResize);
     ro.observe(mount);
-
-    const io = new IntersectionObserver(
-      entries => {
-        inViewRef.current = entries[0]?.isIntersecting ?? true;
-      },
-      { root: null, threshold: 0 }
-    );
-    io.observe(mount);
 
     const onVis = () => {
       pausedRef.current = document.hidden;
@@ -505,7 +497,7 @@ export function LaserFlow({
 
     const animate = () => {
       raf = requestAnimationFrame(animate);
-      if (pausedRef.current || !inViewRef.current) return;
+      if (pausedRef.current) return;
 
       const t = clock.getElapsedTime();
       const dt = Math.max(0, t - prevTime);
@@ -522,11 +514,10 @@ export function LaserFlow({
       (uniforms.uFlowTime.value as number) += cdt;
       (uniforms.uFogTime.value as number) += cdt;
 
-      if (!hasFadedRef.current) {
+      if (internalFade < 1) {
         const fadeDur = 1.0;
-        fade = Math.min(1, fade + cdt / fadeDur);
-        uniforms.uFade.value = fade;
-        if (fade >= 1) hasFadedRef.current = true;
+        internalFade = Math.min(1, internalFade + cdt / fadeDur);
+        uniforms.uFade.value = internalFade;
       }
 
       const tau = Math.max(1e-3, mouseSmoothTime);
@@ -544,7 +535,6 @@ export function LaserFlow({
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
-      io.disconnect();
       document.removeEventListener('visibilitychange', onVis);
       canvas.removeEventListener('pointermove', onMove);
       canvas.removeEventListener('pointerdown', onMove);
@@ -554,8 +544,9 @@ export function LaserFlow({
       canvas.removeEventListener('webglcontextrestored', onCtxRestored);
       geometry.dispose();
       material.dispose();
+      
       renderer.dispose();
-      if (mount.contains(canvas)) mount.removeChild(canvas);
+      if (mount && mount.contains(canvas)) mount.removeChild(canvas);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dpr]);

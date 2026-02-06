@@ -7,7 +7,7 @@ import { Section } from "@/components/layout/Section";
 import { motion } from "framer-motion";
 import { experiences, getPeriodString, getTenureString, getLogoPath } from "@/content/experience";
 
-function SkillsBanner({ skills }: { skills: string[] }) {
+function SkillsBanner({ skills, direction = "left" }: { skills: string[]; direction?: "left" | "right" }) {
   const firstSetRef = useRef<HTMLDivElement>(null);
   const [setWidth, setSetWidth] = useState(0);
 
@@ -16,6 +16,10 @@ function SkillsBanner({ skills }: { skills: string[] }) {
       setSetWidth(firstSetRef.current.offsetWidth);
     }
   }, [skills]);
+
+  const animateX = direction === "left"
+    ? [0, -setWidth]
+    : [-setWidth, 0];
 
   return (
     <div className="mt-6 overflow-hidden">
@@ -27,12 +31,12 @@ function SkillsBanner({ skills }: { skills: string[] }) {
         {/* Scrolling container */}
         <motion.div
           className="flex w-fit"
-          animate={setWidth > 0 ? { x: [0, -setWidth] } : undefined}
+          animate={setWidth > 0 ? { x: animateX } : undefined}
           transition={{
             x: {
               repeat: Infinity,
               repeatType: "loop",
-              duration: 40,
+              duration: 55,
               ease: "linear",
             },
           }}
@@ -126,7 +130,7 @@ export function Experience() {
 
               {/* Skills Banner */}
               {role.skills && role.skills.length > 0 && (
-                <SkillsBanner skills={role.skills} />
+                <SkillsBanner skills={role.skills} direction={i % 2 === 0 ? "left" : "right"} />
               )}
             </motion.div>
           ))}

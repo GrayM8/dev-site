@@ -1,6 +1,7 @@
 import React from "react";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { projects } from "@/content/projects";
+import { getProjectsWithPages } from "@/content/projects";
 import { ProjectClient } from "./ProjectClient";
 
 interface ProjectPageProps {
@@ -8,25 +9,42 @@ interface ProjectPageProps {
 }
 
 export async function generateStaticParams() {
-  return projects.map((project) => ({
+  return getProjectsWithPages().map((project) => ({
     slug: project.slug,
   }));
 }
 
-export async function generateMetadata({ params }: ProjectPageProps) {
+export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const project = getProjectsWithPages().find((p) => p.slug === slug);
   if (!project) return { title: "Project Not Found" };
-  
+
+  const description = project.metaDescription || project.overview || project.tagline;
+
   return {
-    title: `${project.title} | Projects`,
-    description: project.tagline,
+    title: project.title,
+    description,
+    keywords: project.tech,
+    alternates: {
+      canonical: `/projects/${slug}`,
+    },
+    openGraph: {
+      title: `${project.title} | Gray Marshall`,
+      description,
+      url: `/projects/${slug}`,
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${project.title} | Gray Marshall`,
+      description,
+    },
   };
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const project = getProjectsWithPages().find((p) => p.slug === slug);
 
   if (!project) {
     notFound();

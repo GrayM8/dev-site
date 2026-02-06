@@ -3,7 +3,7 @@
 import React from "react";
 import { Container } from "@/components/layout/Container";
 import { Footer } from "@/components/sections/Footer";
-import { Project, projects } from "@/content/projects";
+import { Project, getProjectsWithPages } from "@/content/projects";
 import { SystemCard } from "@/components/sections/Systems";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Github, ExternalLink } from "lucide-react";
@@ -50,8 +50,8 @@ function RelatedProjectCard({ project }: { project: Project }) {
 export function ProjectClient({ project }: { project: Project }) {
   const { scrollY } = useScroll();
 
-  // Get related projects (other projects, excluding current)
-  const relatedProjects = projects
+  // Get related projects (other projects with pages, excluding current)
+  const relatedProjects = getProjectsWithPages()
     .filter((p) => p.slug !== project.slug)
     .slice(0, 2);
 
@@ -96,6 +96,18 @@ export function ProjectClient({ project }: { project: Project }) {
                   <StatusBadge status={project.status} />
                 </div>
 
+                {/* Mobile-only Screen Tile - below badge, above title */}
+                <div className="lg:hidden mb-6">
+                  <SystemCard
+                    title={project.title}
+                    isEven={false}
+                    image={project.image}
+                    secondaryImages={project.secondaryImages}
+                    video={project.video}
+                    className={`w-full ${project.video ? "aspect-[5/3]" : "aspect-video"}`}
+                  />
+                </div>
+
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
                   {project.title}
                 </h1>
@@ -133,12 +145,14 @@ export function ProjectClient({ project }: { project: Project }) {
                 )}
               </div>
 
-              {/* Right - Screen Tile */}
+              {/* Right - Screen Tile (desktop only) */}
               <SystemCard
                 title={project.title}
                 isEven={false}
                 image={project.image}
-                className="w-full lg:w-[420px] aspect-video shrink-0"
+                secondaryImages={project.secondaryImages}
+                video={project.video}
+                className={`hidden lg:block w-full lg:w-[420px] shrink-0 ${project.video ? "aspect-[5/3]" : "aspect-video"}`}
               />
             </div>
           </motion.header>
@@ -152,30 +166,34 @@ export function ProjectClient({ project }: { project: Project }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <section>
-                <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6">
-                  Overview
-                </h2>
-                <div className="space-y-4">
-                  {project.description.map((paragraph, i) => (
-                    <p
-                      key={i}
-                      className="text-lg text-foreground/80 leading-relaxed"
-                    >
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              </section>
+              {/* Overview */}
+              {project.overview && (
+                <section>
+                  <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6">
+                    Overview
+                  </h2>
+                  <p className="text-lg text-foreground/80 leading-relaxed">
+                    {project.overview}
+                  </p>
+                </section>
+              )}
 
-              {/* Placeholder for future content */}
-              <section className="p-6 rounded-lg bg-card/30 border border-border/50 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-1 h-full bg-accent/50" />
-                <p className="text-sm text-muted-foreground italic pl-4">
-                  Detailed technical documentation, architecture diagrams, and
-                  implementation notes for this project are being prepared.
-                </p>
-              </section>
+              {/* Detail Bullets */}
+              {project.detailBullets && project.detailBullets.length > 0 && (
+                <section>
+                  <h2 className="text-sm font-mono uppercase tracking-widest text-muted-foreground mb-6">
+                    Highlights
+                  </h2>
+                  <ul className="space-y-4">
+                    {project.detailBullets.map((bullet, i) => (
+                      <li key={i} className="flex items-start text-foreground/80 leading-relaxed">
+                        <span className="mr-3 mt-2 w-1.5 h-1.5 rounded-full bg-accent/60 shrink-0" />
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
             </motion.div>
 
             {/* Right Column - Metadata */}
@@ -209,15 +227,20 @@ export function ProjectClient({ project }: { project: Project }) {
                 </h3>
                 <div className="space-y-3">
                   {project.link && (
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center text-sm text-foreground hover:text-accent transition-colors group"
-                    >
-                      <ExternalLink className="w-4 h-4 mr-3 text-muted-foreground group-hover:text-accent" />
-                      Live Application
-                    </a>
+                    <div>
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center text-sm text-foreground hover:text-accent transition-colors group"
+                      >
+                        <ExternalLink className="w-4 h-4 mr-3 text-muted-foreground group-hover:text-accent" />
+                        Live Application
+                      </a>
+                      {project.linkNote && (
+                        <p className="text-xs text-muted-foreground/60 ml-7 mt-1">{project.linkNote}</p>
+                      )}
+                    </div>
                   )}
                   {project.repo && (
                     <a
@@ -230,7 +253,19 @@ export function ProjectClient({ project }: { project: Project }) {
                       GitHub Repository
                     </a>
                   )}
-                  {!project.link && !project.repo && (
+                  {project.repos && project.repos.map((repo) => (
+                    <a
+                      key={repo.url}
+                      href={repo.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-sm text-foreground hover:text-accent transition-colors group"
+                    >
+                      <Github className="w-4 h-4 mr-3 text-muted-foreground group-hover:text-accent" />
+                      {repo.label}
+                    </a>
+                  ))}
+                  {!project.link && !project.repo && !project.repos && (
                     <p className="text-sm text-muted-foreground italic">
                       No external links available
                     </p>

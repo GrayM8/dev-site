@@ -32,7 +32,7 @@ function SkillsBanner({ skills }: { skills: string[] }) {
             x: {
               repeat: Infinity,
               repeatType: "loop",
-              duration: 40,
+              duration: 55,
               ease: "linear",
             },
           }}
