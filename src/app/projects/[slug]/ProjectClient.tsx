@@ -96,6 +96,18 @@ export function ProjectClient({ project }: { project: Project }) {
                   <StatusBadge status={project.status} />
                 </div>
 
+                {/* Mobile-only Screen Tile - below badge, above title */}
+                <div className="lg:hidden mb-6">
+                  <SystemCard
+                    title={project.title}
+                    isEven={false}
+                    image={project.image}
+                    secondaryImages={project.secondaryImages}
+                    video={project.video}
+                    className={`w-full ${project.video ? "aspect-[5/3]" : "aspect-video"}`}
+                  />
+                </div>
+
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
                   {project.title}
                 </h1>
@@ -133,14 +145,14 @@ export function ProjectClient({ project }: { project: Project }) {
                 )}
               </div>
 
-              {/* Right - Screen Tile */}
+              {/* Right - Screen Tile (desktop only) */}
               <SystemCard
                 title={project.title}
                 isEven={false}
                 image={project.image}
                 secondaryImages={project.secondaryImages}
                 video={project.video}
-                className={`w-full lg:w-[420px] shrink-0 ${project.video ? "aspect-[5/3]" : "aspect-video"}`}
+                className={`hidden lg:block w-full lg:w-[420px] shrink-0 ${project.video ? "aspect-[5/3]" : "aspect-video"}`}
               />
             </div>
           </motion.header>

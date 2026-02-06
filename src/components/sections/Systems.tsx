@@ -23,6 +23,42 @@ interface SystemCardProps {
 export function SystemCard({ title, isEven, className, image, secondaryImages, video }: SystemCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [scrollTiltX, setScrollTiltX] = useState(0);
+  const dragStart = useRef<{ x: number; y: number } | null>(null);
+
+  // Detect mobile on mount
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Dynamic scroll-based tilt for mobile
+  useEffect(() => {
+    if (!isMobile || !ref.current) return;
+
+    const updateScrollTilt = () => {
+      if (!ref.current || isDragging) return;
+      const rect = ref.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+
+      // Calculate card center relative to viewport center (-0.5 to 0.5)
+      const cardCenter = rect.top + rect.height / 2;
+      const viewportCenter = viewportHeight / 2;
+      const relativePosition = (cardCenter - viewportCenter) / viewportHeight;
+
+      // Tilt based on position: cards at top have top closer, cards at bottom have bottom closer
+      // Max tilt of ~12 degrees
+      setScrollTiltX(relativePosition * 24);
+    };
+
+    updateScrollTilt();
+    window.addEventListener('scroll', updateScrollTilt, { passive: true });
+    return () => window.removeEventListener('scroll', updateScrollTilt);
+  }, [isMobile, isDragging]);
 
   // All images: main first, then secondaries
   const allImages = image ? [image, ...(secondaryImages || [])] : [];
@@ -53,14 +89,22 @@ export function SystemCard({ title, isEven, className, image, secondaryImages, v
     return () => clearTimeout(timeoutId);
   }, [hasMultipleImages, imageCount]);
 
-  // Default resting angles
-  const defaultRotateY = isEven ? 12 : -12;
-  const defaultRotateX = -6;
+  // Default resting angles - mobile: dynamic vertical tilt based on scroll, no horizontal
+  const defaultRotateY = isMobile ? 0 : (isEven ? 12 : -12);
+  const defaultRotateX = isMobile ? scrollTiltX : -6;
 
   // Motion values
   const targetRotateX = useMotionValue(defaultRotateX);
   const targetRotateY = useMotionValue(defaultRotateY);
   const scale = useMotionValue(1);
+
+  // Update tilt when scroll position changes (mobile) or when isMobile changes
+  useEffect(() => {
+    if (!isDragging) {
+      targetRotateX.set(defaultRotateX);
+      targetRotateY.set(defaultRotateY);
+    }
+  }, [isMobile, defaultRotateX, defaultRotateY, isDragging, targetRotateX, targetRotateY, scrollTiltX]);
 
   // Smooth springs
   const rotateX = useSpring(targetRotateX, { stiffness: 300, damping: 20 });
@@ -68,7 +112,7 @@ export function SystemCard({ title, isEven, className, image, secondaryImages, v
   const scaleSpring = useSpring(scale, { stiffness: 300, damping: 20 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
+    if (!ref.current || isMobile) return;
     const rect = ref.current.getBoundingClientRect();
 
     // Normalize mouse position (-0.5 to 0.5)
@@ -82,6 +126,39 @@ export function SystemCard({ title, isEven, className, image, secondaryImages, v
   };
 
   const handleMouseLeave = () => {
+    if (isMobile) return;
+    targetRotateX.set(defaultRotateX);
+    targetRotateY.set(defaultRotateY);
+    scale.set(1);
+  };
+
+  // Touch handlers for mobile drag
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isMobile) return;
+    const touch = e.touches[0];
+    dragStart.current = { x: touch.clientX, y: touch.clientY };
+    setIsDragging(true);
+    scale.set(1.02);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isMobile || !ref.current || !dragStart.current) return;
+    const touch = e.touches[0];
+    const rect = ref.current.getBoundingClientRect();
+
+    // Calculate drag delta relative to card size
+    const deltaX = (touch.clientX - dragStart.current.x) / rect.width;
+    const deltaY = (touch.clientY - dragStart.current.y) / rect.height;
+
+    // Apply tilt based on drag (max +/- 20deg)
+    targetRotateY.set(deltaX * 40);
+    targetRotateX.set(deltaY * -40);
+  };
+
+  const handleTouchEnd = () => {
+    if (!isMobile) return;
+    dragStart.current = null;
+    setIsDragging(false);
     targetRotateX.set(defaultRotateX);
     targetRotateY.set(defaultRotateY);
     scale.set(1);
@@ -95,7 +172,10 @@ export function SystemCard({ title, isEven, className, image, secondaryImages, v
         ref={ref}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="w-full h-full bg-[#101010] border border-white/10 rounded-lg shadow-2xl relative overflow-hidden group cursor-pointer"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        className="w-full h-full bg-[#101010] border border-white/10 rounded-lg shadow-2xl relative overflow-hidden group cursor-pointer touch-none"
         style={{
           rotateX,
           rotateY,
