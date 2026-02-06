@@ -97,6 +97,7 @@ export default function Home() {
         className="relative z-10 w-full" 
         style={{ marginTop: "95vh", opacity: contentOpacity }}
       >
+        <div className="pt-16 md:pt-0" />
         <About />
         <Systems />
         <Experience />
