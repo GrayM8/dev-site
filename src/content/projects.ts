@@ -24,7 +24,11 @@ export interface Project {
   /** Video filename for project tile (e.g., "demo.mp4"). Videos are stored in /public/project-images/ */
   video?: string;
   repo?: string;
+  /** Additional repository links (for monorepos, subfolders, etc.) */
+  repos?: { label: string; url: string }[];
   link?: string;
+  /** Note displayed below the link (e.g., "Login required") */
+  linkNote?: string;
 }
 
 /** Helper to get the full image path for a project */
@@ -56,7 +60,8 @@ export const projects: Project[] = [
     featured: true,
     category: "main",
     image: "lsr-og.png",
-    link: "https://longhornsimracing.com"
+    link: "https://longhornsimracing.com",
+    repo: "https://github.com/GrayM8/lsr-site"
   },
   {
     title: "Formula SAE EV Telemetry System",
@@ -81,7 +86,14 @@ export const projects: Project[] = [
     featured: true,
     category: "main",
     image: "home.png",
-    secondaryImages: ["drive-day-1.png", "drive-day-2.png", "grafana-1.png", "live-view-1.png", "texas-tune-1.png", "texas-tune-2.png", "texas-tune-3.png"]
+    secondaryImages: ["drive-day-1.png", "drive-day-2.png", "grafana-1.png", "live-view-1.png", "texas-tune-1.png", "texas-tune-2.png", "texas-tune-3.png"],
+    link: "https://lhrelectric.org/",
+    linkNote: "Login may be required",
+    repos: [
+      { label: "Monorepo", url: "https://github.com/LonghornRacingElectric/lhre-2026/tree/main" },
+      { label: "Telemetry", url: "https://github.com/LonghornRacingElectric/lhre-2026/tree/main/telemtry" },
+      { label: "Web Tool", url: "https://github.com/LonghornRacingElectric/lhre-2026/tree/main/telemtry/analysis/database/viewer_tool" }
+    ]
   },
   {
     title: "In-Vehicle Driver Dash System",
@@ -104,7 +116,11 @@ export const projects: Project[] = [
     status: "In Development",
     featured: true,
     category: "main",
-    video: "dash5.mp4"
+    video: "dash5.mp4",
+    repos: [
+      { label: "Monorepo", url: "https://github.com/LonghornRacingElectric/lhre-2026/tree/main" },
+      { label: "Dash Frontend", url: "https://github.com/LonghornRacingElectric/lhre-2026/tree/main/BEVO/dashd/frontend" }
+    ]
   },
 
   // ==================== ALL PROJECTS (non-featured) ====================
@@ -129,7 +145,9 @@ export const projects: Project[] = [
     status: "Live",
     featured: false,
     category: "main",
-    image: "portfolio.PNG"
+    image: "portfolio.PNG",
+    link: "https://www.graymarshall.dev/",
+    repo: "https://github.com/GrayM8/dev-site"
   },
 
   // ==================== ACADEMIC PROJECTS ====================

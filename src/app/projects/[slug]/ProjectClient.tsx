@@ -227,15 +227,20 @@ export function ProjectClient({ project }: { project: Project }) {
                 </h3>
                 <div className="space-y-3">
                   {project.link && (
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center text-sm text-foreground hover:text-accent transition-colors group"
-                    >
-                      <ExternalLink className="w-4 h-4 mr-3 text-muted-foreground group-hover:text-accent" />
-                      Live Application
-                    </a>
+                    <div>
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center text-sm text-foreground hover:text-accent transition-colors group"
+                      >
+                        <ExternalLink className="w-4 h-4 mr-3 text-muted-foreground group-hover:text-accent" />
+                        Live Application
+                      </a>
+                      {project.linkNote && (
+                        <p className="text-xs text-muted-foreground/60 ml-7 mt-1">{project.linkNote}</p>
+                      )}
+                    </div>
                   )}
                   {project.repo && (
                     <a
@@ -248,7 +253,19 @@ export function ProjectClient({ project }: { project: Project }) {
                       GitHub Repository
                     </a>
                   )}
-                  {!project.link && !project.repo && (
+                  {project.repos && project.repos.map((repo) => (
+                    <a
+                      key={repo.url}
+                      href={repo.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-sm text-foreground hover:text-accent transition-colors group"
+                    >
+                      <Github className="w-4 h-4 mr-3 text-muted-foreground group-hover:text-accent" />
+                      {repo.label}
+                    </a>
+                  ))}
+                  {!project.link && !project.repo && !project.repos && (
                     <p className="text-sm text-muted-foreground italic">
                       No external links available
                     </p>
