@@ -422,7 +422,8 @@ export function TerminalHero({ scrollY, alwaysHeader = false }: TerminalHeroProp
                 ) : (
                   <motion.a
                     key="resume"
-                    href="/resume.pdf"
+                    href="/downloads/Matthew_Gray_Marshall_SWE_Resume.pdf"
+                    download
                     target="_blank"
                     initial={{ y: 5, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
