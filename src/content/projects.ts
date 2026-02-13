@@ -63,7 +63,7 @@ export const projects: Project[] = [
     featured: true,
     category: "main",
     image: "lsr-og.png",
-    link: "https://longhornsimracing.com",
+    link: "https://www.longhornsimracing.org",
     repo: "https://github.com/GrayM8/lsr-site"
   },
   {
