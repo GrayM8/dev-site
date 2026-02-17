@@ -11,6 +11,7 @@ import { ContactBar } from "@/components/sections/ContactBar";
 import { Footer } from "@/components/sections/Footer";
 import Galaxy from "@/components/background/Galaxy";
 import LaserFlow from "@/components/terminal/LaserFlow";
+import { ScrollIndicator } from "@/components/ScrollIndicator";
 
 export default function Home() {
   const { scrollY } = useScroll();
@@ -90,6 +91,9 @@ export default function Home() {
            <TerminalHero scrollY={scrollY} />
         </div>
       </div>
+
+      {/* Scroll Indicator */}
+      <ScrollIndicator scrollY={scrollY} />
 
       {/* Scrollable Content Layer */}
       {/* Starts after the "boot" scroll distance. Opacity ensures it doesn't peek early. */}
