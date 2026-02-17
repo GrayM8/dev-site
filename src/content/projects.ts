@@ -156,6 +156,33 @@ export const projects: Project[] = [
     repo: "https://github.com/GrayM8/dev-site"
   },
 
+  {
+    title: "AgentWorkspaces",
+    slug: "agent-workspaces",
+    tagline: "Real-Time AI Collaboration Platform",
+    metaDescription: "A real-time multi-user AI collaboration platform built on Cloudflare's edge with Durable Objects, WebSockets, and structured LLM tool-calling.",
+    homeBullets: [
+      "Real-time multi-user collaboration powered by Cloudflare Durable Objects and WebSocket Hibernation.",
+      "Structured AI tool-calling engine enabling autonomous state mutation across sessions.",
+      "Full-stack serverless TypeScript monorepo deployed on Cloudflare Pages and Workers."
+    ],
+    overview: "A real-time, multi-user collaboration platform built on Cloudflare's edge infrastructure. Combines persistent WebSocket rooms, shared state synchronization, and a structured LLM tool-calling engine to enable autonomous AI-driven workflows alongside human participants.",
+    detailBullets: [
+      "Engineered a real-time multi-user collaboration platform on Cloudflare's edge using Durable Objects and WebSocket Hibernation to maintain stateful, cost-efficient persistent connections per room.",
+      "Designed a custom WebSocket protocol to synchronize chat, shared memory, todos, artifacts, and settings across concurrent clients with debounced batched writes to durable storage.",
+      "Implemented a structured AI tool-calling engine (Llama 3.3 70B) using a two-pass inference architecture and 9 typed function tools enabling deterministic, autonomous state mutation across sessions.",
+      "Architected a full-stack TypeScript monorepo (React 19, Vite, Tailwind) deployed serverlessly via Cloudflare Pages + Workers, eliminating traditional server infrastructure and minimizing cold-start latency."
+    ],
+    tech: ["TypeScript", "React", "Cloudflare Workers", "Durable Objects", "WebSockets"],
+    status: "Live",
+    featured: false,
+    category: "main",
+    image: "agents1.PNG",
+    secondaryImages: ["agents2.PNG", "agents3.PNG", "agents4.PNG", "agents5.PNG", "agents6.PNG", "agents7.PNG", "agents8.PNG"],
+    link: "https://agentworkspaces.pages.dev/",
+    repo: "https://github.com/GrayM8/cf_ai_agentworkspaces"
+  },
+
   // ==================== ACADEMIC PROJECTS ====================
   {
     title: "Operating Systems Kernel (Pintos)",
